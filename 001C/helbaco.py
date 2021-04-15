@@ -20,7 +20,20 @@ class player:
 def main():
     list_player = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
     
-    for p in sorted(list_player, key=lambda player: player.kills):
+    print('unsorted list')
+    for p in list_player:
+        print(p.secrets, p.playtime_s, p.kills, p.name)
+
+    print('secrets ascending')
+    for p in sorted(list_player, key=lambda obj: obj.secrets):
+        print(p.secrets, p.name)
+
+    print('playtime decending')
+    for p in sorted(list_player, key=lambda obj: obj.playtime_s, reverse=True):
+        print(p.playtime_s, p.name)
+
+    print('kills ascending')
+    for p in sorted(list_player, key=lambda obj: obj.kills):
         print(p.kills, p.name)
 
 if __name__ == "__main__":
