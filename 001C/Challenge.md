@@ -1,6 +1,7 @@
 # DE
 ## Weitere Regeln
 - Python 3.8.x
+- Du kannst auch gerne die Aufgabe in einer anderen Sprache lösen. Die werden wir aber nicht on-stream besprechen und uns ansehen. Vorrangig wollen wir hier Python lernen. Im PR kannst du aber gerne einen Screenshot anhängen, der zeigt, dass dein Code ebenfalls funktioniert.
 - Nur ein File mit dem Twitchnamen (Beispiel: technik_tueftler.py).
 - Grundlegende Struktur des Codes siehe technik_tueftler.py.
 - Gestartet wird die Challenge am 14.04.2021 im Stream.
@@ -10,7 +11,7 @@
 Für ein Spiel entwickel eine Modul (ein Python-File) was eine sortierte Liste für einen Highscore zurückgibt. Die sortierte Liste soll wieder die entgegengenommenen Objekte zurückgeben. Die Objekte sind beendete Spiele mit verschiedenen Attributen. Die Spieler (Objekte) sollen wie folgt sortiert und priorisiert werden:  
 1. secrets in aufsteigender Reihenfolge (je mehr secrets desto besser)  
 2. playtime_s in absteigender Reihenfolge (je weniger Zeit gebraucht wurde desto besser)  
-3. kills in aufsteigender Reihenfolge (je mehr secrets desto besser)  
+3. kills in aufsteigender Reihenfolge (je mehr kills desto besser)  
 **Übergabe einer unsortierten Liste:** [<player_1>, <player_2>, <player_n>]  
 **Rückgabe einer sortierten Liste:** [<player_2>, <player_1>, <player_n>]  
 ## Test
@@ -64,9 +65,9 @@ An erster Stelle steht der Spaß und eine gemeinsame Lösung am Ende mit euch. I
 - For the first attempt to measure the runtime we use the module timeit. For this the complete code should be in a string at the end. 
 ## Challenge
 Develop (for a game) a module (a Python file) which returns a sorted list for a highscore. The sorted list should return the input objects. The objects are finished games with different attributes. The players (objects) shall be sorted and prioritized as follows:  
-1. secrets in ascending order (the more secrets the better).  
-2. playtime_s in descending order (the less time used the better)  
-3. kills in ascending order (the more secrets the better)  
+1. secrets in ascending order (more secrets, better).  
+2. playtime_s in descending order (less time, better)  
+3. kills in ascending order (more kills, better)  
 **Handing over an unsorted list:** [<player_1>, <player_2>, <player_n>]  
 **Return of a sorted list:** [<player_2>, <player_1>, <player_n>]  
 ## Test

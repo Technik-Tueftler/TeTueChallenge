@@ -7,6 +7,7 @@ Verschiedene Übungen und Aufgabenstellungen, die zusammen mit den Chattern in e
 - Vom Projekt einen Folk erstellen (achtet hier auf eure Privatsphäre oder habt sie im Blick).
 - Erarbeitet eine Lösung oder Idee und stellt einen PR in mein **base repository**.
 - Der letzte Commit muss vor dem Abgabetermin eingegangen sein.
+- Anonyme Abgabe, ist natürlich auch möglich. Dazu einfach den Code per Nachrichtentext an technik.tueftler@gmail.com senden (keine Dateien mitsenden).
 
 # ENG
 ## Summary TeTueChallenge
@@ -17,3 +18,4 @@ Different exercises and common competition with chatters
 - Create a folk from the project (be aware of your privacy here or have an eye on it).
 - Solve the task or write down an idea and create a PR to my **base repository**.
 - The last commit must be received before the deadline.
+- Anonymous submission is also possible. Simply send the code via message text to technik.tueftler@gmail.com (do not send files).
