@@ -16,62 +16,44 @@ class player:
         self.playtime_s = playtime_s # min, max, resolution
         self.kills = kills # min, max, resolution
 
+def sort_highscore_list(playerlist):
+    multiplier_secrets = 1000000000000000 # 999000000000000000
+    max_time = 999999999
+    multiplier_time = 1000000             #    999999999000000
+    sorted_list = []
+    test = 0
+    start = time.time()
+    extend_list = [[(temp_player.secrets*multiplier_secrets)+((max_time-temp_player.playtime_s)*multiplier_time)+(temp_player.kills), temp_player] for temp_player in playerlist]
+    # Blasensortierung / bubble sort
+    for i in range(len(extend_list)):
+        ## iterating from 0 to n-i-1 as last i elements are already sorted
+        for j in range(len(extend_list) - i - 1):
+            ## checking the next element
+            print(test)
+            if extend_list[j][0] < extend_list[j + 1][0]:
+                test = test +1
+                ## swapping the adjucent elements
+                extend_list[j], extend_list[j + 1] = extend_list[j + 1], extend_list[j]
+    end = time.time()
+    print(f'Dauer der Funktion <sort_highscore_list> beträgt {end - start} Sekunden.')
+    return extend_list
+
 def get_testlist():
     test_list = []
     start = time.time()
-    for i in range(100000):
+    for i in range(1000):
         test_list.append(player(str(i), random.randrange(1,100), random.randrange(1,500), random.randrange(1,1000)))
     end = time.time()
-    #print(f'Liste mit {len(test_list)} Einträgen erstellt in {end - start} Sekunden')
-
     return test_list
 
-    # start = time.time()
-    # test_list_2 = [player(str(i), random.randrange(1,1000), random.randrange(1,1000), random.randrange(1,1000)) for i in range(10000)]
-    # end = time.time()
-    # print(end - start)
-    # print(len(test_list_2))
-
-def main1():
-    sorted_list_1 = []
+def main():
     list_player_start = get_testlist()
-    # list_player_start = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
-    # for rank, element in enumerate(list_player_start, start=1):
-    #     print(rank, element.name)
-    
-    start = time.time()
-    sorted_list_1 = [[(temp_player.secrets*multiplier_secrets)+((max_time-temp_player.playtime_s)*multiplier_time)+(temp_player.kills), temp_player] for temp_player in list_player_start]
-    # for temp_player in list_player_start:
-    #     sorted_list_1.append([(temp_player.secrets*multiplier_secrets)+((max_time-temp_player.playtime_s)*multiplier_time)+(temp_player.kills), temp_player])
+    #list_player_start = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
 
-    #sorted_list_2 = sorted(sorted_list_1, key=itemgetter(0), reverse=True)
-    #sorted_list_2 = sorted(sorted_list_1, key=lambda x:x[0], reverse=True)
-    sorted_list_2 = sort(sorted_list_1)
-    end = time.time()
-    print(end - start)
+    sorted_list = sort_highscore_list(list_player_start)
+    for i in range(7):
+        print(f'{i}: {sorted_list[i][1].name} mit G[{sorted_list[i][1].secrets}], Z[{sorted_list[i][1].playtime_s}], G[{sorted_list[i][1].kills}]')
 
-    for i in range(10):
-        print(f'{i}: {sorted_list_2[i][1].name} mit G[{sorted_list_2[i][1].secrets}], Z[{sorted_list_2[i][1].playtime_s}], G[{sorted_list_2[i][1].kills}]')
-
-    # for rank, element in enumerate(sorted_list_2, start=1):
-    #     print(rank, element[1].name)
-
-def main2():
-    sorted_list_1 = []
-    sorted_list_2 = []
-    list_player_start = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
-    for rank, element in enumerate(list_player_start, start=1):
-        print(rank, element.name)
-
-    start = time.time()
-    sorted_list_1 = sorted(list_player_start, key=itemgetter(0), reverse=True)
-    sorted_list_2 = sorted(sorted_list_1, key=itemgetter(1))
-    sorted_list_3 = sorted(sorted_list_2, key=itemgetter(2), reverse=True)
-    end = time.time()
-    print(end - start)
-    for rank, element in enumerate(sorted_list_3, start=1):
-        print(rank, element.name)  
     
 if __name__ == "__main__":
-    main1()
-    #get_testlist()
+    main()
