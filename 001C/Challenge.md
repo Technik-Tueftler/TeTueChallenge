@@ -6,19 +6,28 @@
 - Grundlegende Struktur des Codes siehe technik_tueftler.py.
 - Gestartet wird die Challenge am 14.04.2021 im Stream.
 - Der letzte Commit muss bis 12.05.2021 19:30 Uhr gepushed sein.
-- Für den ersten Versuch zum messen der Laufzeit benutzen wir das Modul timeit. Dazu sollte der komplette Code am Ende in einem String stehen. 
+- Für den ersten Versuch zum messen der Laufzeit benutzen wir das Modul timeit. Dazu sollte der komplette Code am Ende in einem String stehen.
 ## Aufgabe
 Für ein Spiel entwickel eine Modul (ein Python-File) was eine sortierte Liste für einen Highscore zurückgibt. Die sortierte Liste soll wieder die entgegengenommenen Objekte zurückgeben. Die Objekte sind beendete Spiele mit verschiedenen Attributen. Die Spieler (Objekte) sollen wie folgt sortiert und priorisiert werden:  
-1. secrets in aufsteigender Reihenfolge (je mehr secrets desto besser)  
-2. playtime_s in absteigender Reihenfolge (je weniger Zeit gebraucht wurde desto besser)  
+1. secrets in aufsteigender Reihenfolge (je mehr secrets desto besser)
+--> Hier kann für eine bessere Optimierung ein Maximalwert von 100 angenommen werden.
+2. playtime_s in absteigender Reihenfolge (je weniger Zeit gebraucht wurde desto besser)
+--> Hier kann für eine bessere Optimierung ein Maximalwert von 4.000.000 angenommen werden.
 3. kills in aufsteigender Reihenfolge (je mehr kills desto besser)  
+--> Hier kann für eine bessere Optimierung ein Maximalwert von 999.999 angenommen werden.
 **Übergabe einer unsortierten Liste:** [<player_1>, <player_2>, <player_n>]  
 **Rückgabe einer sortierten Liste:** [<player_2>, <player_1>, <player_n>]  
 ## Test
-
-### Test Daten
+Für den Highscore ist eine Optimierung für Datensätze bis maximal 1000 Objekte Sinnvoll. Der Algorithmus kann also gerne auf diese Maximalmenge angepasst und optimiert werden.
+### Test Daten für Sortierung
 ```python
 test_list = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
+```
+### Test Daten für Performace
+```python
+test_list = []
+for i in range(1000):
+    test_list.append(player(str(i), random.randrange(1,100), random.randrange(1,500), random.randrange(1,1000)))
 ```
 ### Print-Function
 ```python
