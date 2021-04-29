@@ -41,7 +41,7 @@ def sort_highscore_list(playerlist):
 def get_testlist():
     test_list = []
     start = time.time()
-    for i in range(1000):
+    for i in range(100):
         test_list.append(player(str(i), random.randrange(1,100), random.randrange(1,500), random.randrange(1,1000)))
     end = time.time()
     return test_list
@@ -53,7 +53,6 @@ def main():
     sorted_list = sort_highscore_list(list_player_start)
     for i in range(7):
         print(f'{i}: {sorted_list[i][1].name} mit G[{sorted_list[i][1].secrets}], Z[{sorted_list[i][1].playtime_s}], G[{sorted_list[i][1].kills}]')
-
     
 if __name__ == "__main__":
     main()
