@@ -22,13 +22,31 @@ def sortGames(unsortedList):
         scores.remove(maxScore) # remove the max score from the score list
     return sortedList
 
+def sortGamesShort(unsortedList):
+    sortedList=[] 
+    scores = [] # a list of values representing the three dimensional highscore space as a single scalar
+    for player in unsortedList: # calc the score for every player
+        scores.append( player.secrets*10000000000000  + 9999999000000/player.playtime_s + player.kills )
+    while len(scores) > 0: # repeat until no player is left in list
+        sortedList.append( unsortedList[scores.index(max(scores))]) # add the max score player to the output list
+        unsortedList.remove( unsortedList[scores.index(max(scores))]) # remove the max score player from the input list
+        scores.remove(max(scores)) # remove the max score from the score list
+    return sortedList
+
 def main():
+    print("Test TIME efficient algo version")
+    TestAlgo(sortGames)
+    print("------------------------------")
+    print("Test LINE efficient algo version")
+    TestAlgo(sortGamesShort)
+
+def TestAlgo(testfunction):
     test_list = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
     
     print('-----------')
     print('sorted Result')
     print('-----------')
-    test_list_sorted = sortGames(test_list)
+    test_list_sorted = testfunction(test_list)
     for rank, element in enumerate(test_list_sorted, start=1):
         print(rank, element.name)
 
@@ -45,7 +63,7 @@ def main():
         for i in range(PerformanceListSize):
             test_list.append(player(str(i), random.randrange(1,999), random.randrange(1,9999999), random.randrange(1,999999)))
         startTime=time.monotonic_ns() # aquire starting time
-        test_list_sorted = sortGames(test_list) # do the thing
+        test_list_sorted = testfunction(test_list)
         endTime = time.monotonic_ns() # aquire endtime
         diff = endTime-startTime 
         times.append(diff) # make a list of times the algo has taken
