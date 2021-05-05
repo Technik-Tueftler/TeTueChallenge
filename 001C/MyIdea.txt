@@ -1,0 +1,49 @@
+### WHAT TO DO ####
+Sorting the list based on three different attributes "SECRETS PLAYTIME KILLS".
+Each attribute has different weighting. SECRETS first, PLAYTIME second, KIllS last.
+PLAYTIME is in inverse logic.
+
+### The PROBLEM ####
+Sorting the list one by one for each attribute is not very effective and therefore not an option.
+
+### The IDEA ####
+Create an "player_highscore" based on the three attributes SECRETS PLAYTIME KILLS.
+With this "player_highscore" all player attributes are combined into one single value.
+This will make the sorting much more effective because the complete
+ list needs to be sorted only once based on the "player_highscore"
+This "player_highscore" can also be used for showing the player his actual score
+ at the end of an game stage for example.
+
+### Implementation Idea ####
+Build an value which combines all attributes.
+Adding them will not work, because "3 secrets are better than 100 kills" and "2 minutes are better than 10 minutes".
+Two overcome this problem each attribute has a predefined bit range in the "player_highscore"
+By bit shifting the attribute more to the left inside the "player_highscore"
+ the weighting of the attribute will be increased.
+
+The following diagram will show this in much more detail based on the given MAX_* values.
+MAX_SECRETS = 999
+MAX_PLAYTIME = 9999999
+MAX_KILLS = 999999
+
+    SECRETS                  PLAYTIME                     KILLS
+|--------------| |-----------------------------| |------------------------|
+ 0000 0000 0000   0000 0000 0000 0000 0000 0000   0000 0000 0000 0000 0000
+        3                       6                            5
+     12 Bit                    24 Bit                       20 Bit          => 56 Bit
+  SECRETS << 44             PLAYTIME << 20                KILLS << 0
+
+  0011 1110 0111  0000 0000 0000 0000 0000 0000   0000 0000 0000 0000 0000  == MAX_SECRETS  << 44
+                  1001 1000 1001 0110 0111 1111   0000 0000 0000 0000 0000  == MAX_PLAYTIME << 20
+                                                  1111 0100 0010 0011 1111  == MAX_KILLS
+   Dec: 999                Dec: 9999999                  Dec: 999999
+
+### Sorting ###
+Started with a simple implementation of quicksort....
+
+Based on the general problem by choosing the correct pivot element,
+the stability of the algorithm and the fact the the python "sorting" is extreme fast ...
+
+... the python build in "sorting" algorithm will be used.
+
+Fast, Tested, Already there => This is why we use Python ;)
