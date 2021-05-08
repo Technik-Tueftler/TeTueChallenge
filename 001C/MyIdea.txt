@@ -38,6 +38,12 @@ MAX_KILLS = 999999
                                                   1111 0100 0010 0011 1111  == MAX_KILLS
    Dec: 999                Dec: 9999999                  Dec: 999999
 
+
+(secrets << (len(bin(MAX_PLAYTIME)) + len(bin(MAX_KILLS)) - 4)) \
+               | (max(0, (MAX_PLAYTIME - playtime_s)) << (len(bin(MAX_KILLS)) - 2)) \
+               | kills
+note: bin(x) returns the value = 0bXXXXXXXXX to get the effective length without the 0b, -2 needs to be subtracted
+
 ### Sorting ###
 Started with a simple implementation of quicksort....
 

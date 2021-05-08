@@ -27,20 +27,12 @@ def sort_player_list(list_to_sort):
 
 
 '''
-import random
-test_list = []
-for i in range(1000):
-    test_list.append(Player(str(i), random.randrange(1,100), random.randrange(1,500), random.randrange(1,1000)))
+to_be_sorted_list = [Player("Max", 3, 50, 10), Player("Moritz", 2, 20, 30), Player("Witwe Bolte", 3, 49, 9),
+                     Player("Mecke", 1, 10, 79), Player("Lämpel", 3, 49, 10), Player("Fritz", 2, 20, 31),
+                     Player("Böck", 1, 10, 80)]
 
-sort_player_list(test_list)
+sort_player_list(to_be_sorted_list)
 
-for rank, element in enumerate(test_list, start=1):
+for rank, element in enumerate(to_be_sorted_list, start=1):
     print(rank, element.name)
-
-
-
-max_kills_player = Player("Max_secrets", MAX_SECRETS, 0, MAX_KILLS)
-gamerscore = max_kills_player.gamer_score
-print(len(bin(gamerscore)))
-
 '''
