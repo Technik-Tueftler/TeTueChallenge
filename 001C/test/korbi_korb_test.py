@@ -1,5 +1,5 @@
 import unittest
-from ..korbi_korb import *
+from korbi_korb import *
 import random
 
 
