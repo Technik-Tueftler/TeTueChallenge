@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Provides some different kind of highscore-sort functions
+sort_highscore_list_concept_1: pi(1.090), pc(0.130)
+sort_highscore_list_concept_2: pi(0.039), pc(0.008)
+sort_highscore_list_concept_3: pi(1.140), pc(0.151)
+sort_highscore_list_concept_4: pi(0.038), pc(0.009)
+sort_highscore_list_concept_5: pi(0.038), pc(0.010)
 """
 import time
 import random
@@ -30,9 +35,8 @@ def sort_highscore_list_concept_1(playerlist):
     das Player-Objekt
     Sortierung des Index 0 über "bubble sort" Algorithmus
     Highscore geprüft, OK
-    100   Scores: [ 0.008,  0.001,  0.002,  0.001,  0.002,  0.002,  0.003,  0.001,  0.001,  0.001]
-    1000  Scores: [ 0.150,  0.187,  0.174,  0.172,  0.183,  0.175,  0.183,  0.178,  0.170,  0.156]
-    10000 Scores: [17.723, 20.432, 19.286, 16.656, 16.993, 17.312, 17.407, 17.526, 15.491, 15.382]
+    100   Scores: pi(0.013), pc(0.002) bei 10 Wiederholungen
+    1000  Scores: pi(1.090), pc(0.130) bei 10 Wiederholungen
     """
     extend_list = [
         [
@@ -55,9 +59,8 @@ def sort_highscore_list_concept_2(playerlist):
     der Index 1 das Player-Objekt
     Sortierung des Index 0 über sorted und lambda
     Highscore geprüft, OK
-    100   Scores: [0.005, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000]
-    1000  Scores: [0.011, 0.007, 0.005, 0.007, 0.006, 0.006, 0.005, 0.006, 0.007, 0.006]
-    10000 Scores: [0.065, 0.050, 0.054, 0.057, 0.057, 0.061, 0.065, 0.052, 0.051, 0.056]
+    100   Scores: pi(0.004), pc(0.001) bei 10 Wiederholungen
+    1000  Scores: pi(0.039), pc(0.008) bei 10 Wiederholungen
     """
     extend_list = [
         [
@@ -75,9 +78,8 @@ def sort_highscore_list_concept_3(playerlist):
     Nutzen des Attribut "score" von Player
     Sortierung über den "bubble sort" Algorithmus
     Highscore geprüft, OK
-    100   Scores: [ 0.006,  0.002,  0.002,  0.002,  0.001,  0.002,  0.001,  0.001,  0.001,  0.001]
-    1000  Scores: [ 0.179,  0.176,  0.169,  0.175,  0.186,  0.167,  0.168,  0.168,  0.161,  0.148]
-    10000 Scores: [21.580, 21.511, 23.341, 18.774, 16.069, 15.740, 15.698, 15.877, 16.140, 15.643]
+    100   Scores: pi(0.013), pc(0.003) bei 10 Wiederholungen
+    1000  Scores: pi(1.140), pc(0.151) bei 10 Wiederholungen
     """
     for temp_player in playerlist:
         temp_player.score = (
@@ -97,9 +99,8 @@ def sort_highscore_list_concept_4(playerlist):
     Nutzen des Attribut "score" von Player
     Sortierung über sorted und extra return Funktion
     Highscore geprüft, OK
-    100   Scores: [0.003, 0.000, 0.000, 0.000, 0.001, 0.000, 0.000, 0.000, 0.001, 0.000]
-    1000  Scores: [0.010, 0.008, 0.004, 0.006, 0.005, 0.007, 0.008, 0.006, 0.007, 0.004]
-    10000 Scores: [0.074, 0.093, 0.085, 0.057, 0.054, 0.068, 0.057, 0.060, 0.071, 0.063]
+    100   Scores: pi(0.004), pc(0.001) bei 10 Wiederholungen
+    1000  Scores: pi(0.038), pc(0.009) bei 10 Wiederholungen
     """
     def get_score(player):
         return player.score
@@ -118,9 +119,8 @@ def sort_highscore_list_concept_5(playerlist):
     Nutzen des Attribut "score" von Player
     Sortierung über sorted und lambda
     Highscore geprüft, OK
-    100   Scores: [0.003, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.001, 0.001]
-    1000  Scores: [0.009, 0.006, 0.006, 0.009, 0.005, 0.007, 0.009, 0.012, 0.008, 0.008]
-    10000 Scores: [0.055, 0.057, 0.056, 0.057, 0.053, 0.069, 0.066, 0.068, 0.055, 0.071]
+    100   Scores: pi(0.006), pc(0.001) bei 10 Wiederholungen
+    1000  Scores: pi(0.038), pc(0.010) bei 10 Wiederholungen
     """
     for temp_player in playerlist:
         temp_player.score = (
@@ -159,8 +159,8 @@ def main():
         Player("Fritz", 2, 20, 31),
         Player("Böck", 1, 10, 80)
     ]
-    print("Starte Sortierung")
-    sorted_list = sort_highscore_list_concept_5(list_player_start)
+    print("Starte Sortierung 1")
+    sorted_list = sort_highscore_list_concept_1(list_player_start)
     for i in range(7):
         print(f'{i}: {sorted_list[i].name}')
 
