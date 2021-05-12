@@ -1,13 +1,27 @@
 import time
 import random
 
+
+import time
+import operator
+
+MAX_SECRETS = 999
+MAX_PLAYTIME = 9999999
+MAX_KILLS = 999999
+
 class player:
     def __init__(self, name, secrets=0, playtime_s=0, kills=0):
-        self.gameid = int(time.time()*10000) # create unique id
+        self.gameid = int(time.time() * 10000)  # create unique id
         self.name = name
-        self.secrets = secrets # max 999
-        self.playtime_s = playtime_s # max 9,999,999
-        self.kills = kills # max 999,999
+        self.secrets = max(min(secrets, MAX_SECRETS), 0)
+        self.playtime_s = max(min(playtime_s, MAX_PLAYTIME), 0)  # playing time in seconds
+        self.kills = max(min(kills, MAX_KILLS), 0)
+
+    @property
+    def gamer_score(self):
+        return (self.secrets << (len(bin(MAX_PLAYTIME)) + len(bin(MAX_KILLS)) - 4)) \
+               | (max(0, (MAX_PLAYTIME - self.playtime_s)) << (len(bin(MAX_KILLS)) - 2)) \
+               | self.kills
 
 def sortGames(unsortedList):
     sortedList=[] 
@@ -40,7 +54,7 @@ def main():
     print("Test LINE efficient algo version")
     TestAlgo(sortGamesShort)
 
-def TestAlgo(testfunction):
+def TestAlgo(testfunction, PerformanceListSize, PerformanceAttempts):
     test_list = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
     
     print('-----------')
@@ -53,9 +67,6 @@ def TestAlgo(testfunction):
     print('-----------')
     print('Performance test')
     print('-----------')
-
-    PerformanceListSize = 1000 # how many items are in the list to be sorted
-    PerformanceAttempts = 100 # how many time the algo is executed to try to get the best result
 
     times = []
     for i in range(PerformanceAttempts):

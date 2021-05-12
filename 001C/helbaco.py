@@ -16,9 +16,9 @@ class player:
         self.kills = kills
 
 
-
-def main():
-    list_player = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
+'''
+def main(list_player):
+    #list_player = [player("Max", 3, 50, 10), player("Moritz", 2, 20, 30), player("Witwe Bolte", 3, 49, 9), player("Mecke", 1, 10, 79), player("Lämpel", 3, 49, 10), player("Fritz", 2, 20, 31), player("Böck", 1, 10, 80)]
     
     print('unsorted list')
     for p in list_player:
@@ -35,7 +35,9 @@ def main():
     print('kills ascending')
     for p in sorted(list_player, key=lambda obj: obj.kills):
         print(p.kills, p.name)
-
+    
+    return list_player 
+'''
 if __name__ == "__main__":
     main()
 '''

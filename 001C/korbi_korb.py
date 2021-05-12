@@ -7,7 +7,7 @@ MAX_PLAYTIME = 9999999
 MAX_KILLS = 999999
 
 
-class Player:
+class PlayerK:
     def __init__(self, name, secrets=0, playtime_s=0, kills=0):
         self.gameid = int(time.time() * 10000)  # create unique id
         self.name = name
@@ -24,6 +24,7 @@ class Player:
 
 def sort_player_list(list_to_sort):
     list_to_sort.sort(key=operator.attrgetter("gamer_score"), reverse=True)
+    return list_to_sort
 
 
 '''
