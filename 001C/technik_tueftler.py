@@ -9,12 +9,18 @@ sort_highscore_list_concept_5: pi(0.038), pc(0.010)
 """
 import time
 import random
+import operator
 
 MAX_SECRETS = 999 # Prio 1
 MAX_PLAYTIME = 9999999 # Prio 2
 MAX_KILLS = 999999 # Prio 3
 MULTIPLIER_SECRETS = int(str(MAX_PLAYTIME) + str(MAX_KILLS))+1
-MULTIPLIER_TIME = MAX_KILLS - 1
+MULTIPLIER_TIME = MAX_KILLS + 1
+
+MAX_SECRETS_2 = 999
+MAX_PLAYTIME_2 = 9999999
+MAX_KILLS_2 = 999999
+
 
 class Player:
     """
@@ -27,6 +33,13 @@ class Player:
         self.playtime_s = playtime_s
         self.kills = kills
         self.score = 0
+
+    @property
+    def gamer_score(self):
+        return (self.secrets << (len(bin(MAX_PLAYTIME_2)) + len(bin(MAX_KILLS_2)) - 4)) \
+               | (max(0, (MAX_PLAYTIME_2 - self.playtime_s)) << (len(bin(MAX_KILLS_2)) - 2)) \
+               | self.kills
+
 
 def sort_highscore_list_concept_1(playerlist):
     """
@@ -52,6 +65,7 @@ def sort_highscore_list_concept_1(playerlist):
                 extend_list[j], extend_list[j + 1] = extend_list[j + 1], extend_list[j]
     return [element[1] for element in extend_list]
 
+
 def sort_highscore_list_concept_2(playerlist):
     """
     Highscore-Sort function 2
@@ -71,6 +85,7 @@ def sort_highscore_list_concept_2(playerlist):
     ]
     sorted_list = sorted(extend_list, key=lambda x: x[0], reverse = True)
     return [element[1] for element in sorted_list]
+
 
 def sort_highscore_list_concept_3(playerlist):
     """
@@ -93,6 +108,7 @@ def sort_highscore_list_concept_3(playerlist):
                 playerlist[j], playerlist[j + 1] = playerlist[j + 1], playerlist[j]
     return playerlist
 
+
 def sort_highscore_list_concept_4(playerlist):
     """
     Highscore-Sort function 4
@@ -113,6 +129,7 @@ def sort_highscore_list_concept_4(playerlist):
         )
     return sorted(playerlist, key=get_score, reverse = True)
 
+
 def sort_highscore_list_concept_5(playerlist):
     """
     Highscore-Sort function 5
@@ -130,6 +147,25 @@ def sort_highscore_list_concept_5(playerlist):
         )
     return sorted(playerlist, key=lambda x: x.score, reverse = True)
 
+
+def sort_highscore_list_concept_6(playerlist):
+    """
+    Highscore-Sort function 5
+    Nutzen des Attribut "score" von Player
+    Sortierung über sorted und lambda
+    Highscore geprüft, OK
+    100   Scores: pi(0.006), pc(0.001) bei 10 Wiederholungen
+    1000  Scores: pi(0.038), pc(0.010) bei 10 Wiederholungen
+    """
+    for temp_player in playerlist:
+        temp_player.score = (
+            (temp_player.secrets*MULTIPLIER_SECRETS)+
+            ((MAX_PLAYTIME-temp_player.playtime_s)*MULTIPLIER_TIME)+
+            (temp_player.kills)
+        )
+    return sorted(playerlist, key=operator.attrgetter("score"), reverse = True)
+
+
 def get_testlist(quantity):
     """
     Generate a random Player test list with quantity as a parameter
@@ -139,19 +175,20 @@ def get_testlist(quantity):
         test_list.append(
             Player(
                 str(i),
-                random.randrange(1,100),
-                random.randrange(1,500),
-                random.randrange(1,1000)
+                random.randrange(1,10),
+                random.randrange(1,10),
+                random.randrange(1,10)
             )
         )
     return test_list
+
 
 def main():
     """
     Main function to test sort functions with defined player objects
     """
     list_player_start = [
-        Player("Max", 3, 50, 10),
+        Player("Max", 3, 0, 10),
         Player("Moritz", 2, 20, 30),
         Player("Witwe Bolte", 3, 49, 9),
         Player("Mecke", 1, 10, 79),
@@ -160,9 +197,10 @@ def main():
         Player("Böck", 1, 10, 80)
     ]
     print("Starte Sortierung 1")
-    sorted_list = sort_highscore_list_concept_1(list_player_start)
+    sorted_list = sort_highscore_list_concept_6(list_player_start)
     for i in range(7):
-        print(f'{i}: {sorted_list[i].name}')
+        print(f'{i}: {sorted_list[i].name} {sorted_list[i].playtime_s} {sorted_list[i].score}')
+
 
 if __name__ == "__main__":
     main()
