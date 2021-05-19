@@ -62,8 +62,64 @@ An erster Stelle steht der Spaß und eine gemeinsame Lösung am Ende mit euch. I
 2. Laufzeit (je schneller desto besser)
 3. Nachinstallierte Module über requirements (je weniger desto besser)
 4. Zeilenanzahl (je weniger desto besser)
-5. Sauberer Code (aktueller PEP 8)
-6. Verständlicher Code (für mich und dem Chat)
+~~5. Sauberer Code (aktueller PEP 8)~~
+5. Verständlicher Code (für mich und dem Chat)
+
+# Ergebnisse
+1. Aufgabe erfüllt/nicht erfüllt
+1.1 s1cc3sT
+1.1.1 s1cc3sT           --> i.O.
+1.1.2 s1cc3sT_2         --> i.O.
+1.2 korbi_korb          --> i.O.
+1.3 fingerprint_invalid --> i.O.
+1.4 helbaco             --> n.i.O
+2. Laufzeit
+2.1 s1cc3sT
+2.1.1 s1cc3sT           -->    0.839s (100.000 Einträgen)
+2.1.2 s1cc3sT_2         -->    0.584s (100.000 Einträgen)
+2.2 korbi_korb          -->    1.002s (100.000 Einträgen)
+2.3 fingerprint_invalid --> 1831.867s (100.000 Einträgen)
+2.4 helbaco             --> N.A.
+3. Nachinstallierte Module
+3.1 s1cc3sT
+3.1.1 s1cc3sT           --> Keine
+3.1.2 s1cc3sT_2         --> Operator (Optimierung der Performance)
+3.2 korbi_korb          --> Operator (Optimierung der Performance)
+3.3 fingerprint_invalid --> Keine
+3.4 helbaco             --> Keine
+4. Zeilenanzahl
+4.1 s1cc3sT
+4.1.1 s1cc3sT           -->  1
+4.1.2 s1cc3sT_2         -->  3
+4.2 korbi_korb          -->  2
+4.3 fingerprint_invalid --> 11
+4.4 helbaco             -->  3
+5. Verständlicher Code
+5.1 s1cc3sT
+5.1.1 s1cc3sT
+(+) Beschreibung was passiert in der Funktion. Eventuell nochmal Kurzbeschreibung was macht die Funktion.
+(+) Eine Zeile Code, maximale Vereinfachung.
+(-) Schön wäre es gewesen, wenn es eine eigene Funktion bekommen hätte und nicht in der Main Funktion stehen würde. Eigener return value und übergabe der Liste im Funktionsaufruf. 
+5.1.2 s1cc3sT_2
+(+) Beschreibung was passiert in der Funktion. Eventuell nochmal Kurzbeschreibung was macht die Funktion.
+(+) Wenige Zeilen Code mit selbem Inhalt. Einfache Schreibweise, einfach anzupassen.
+(-) Schön wäre es gewesen, wenn es eine eigene Funktion bekommen hätte und nicht in der Main Funktion stehen würde. Eigener return value und übergabe der Liste im Funktionsaufruf. 
+5.2 korbi_korb
+(+) Richtig cool Idee über Bitshift die Konstanden einzubauen. So entfällt eine Umrechung und ist direkt verknüpft mit den Konstanden und keiner Umrechunung mehr.
+(+) Um die Geschwindigkeit zu erhöhen nochmal mit dem operator gearbeitet.
+(+) Ausfführliche Tests und Beschreibungen der Ideen.
+(+) Im Init der Klasse, Schutz für Fehleingabe.
+(-) Kleine Beschreibung der Funktion im Code.
+5.3 fingerprint_invalid
+(+) Durchläuft man die Liste zweimal hintereinander (nachdem schon mal sortiert wurde) wird der zweite Durchlauf in 0 Sekunden durchlaufen, da schon sortiert ist.
+(+) Eigene Umsetzung angelehnt an C ohne Hilfsfunktionen.
+(+) Zeilengenaue Beschreibung der Funktion.
+(+) Liste wird an die Funktion übergeben und es wird eine andere Liste zurückgegeben.
+(-) Kleine Beschreibung der Funktion im Code.
+(-) Division durch null möglich.
+5.4 helbaco
+(+) Wenige Zeilen Code mit selbem Inhalt. Einfache Schreibweise, einfach anzupassen.
+(-) Es wird nicht sortiert.
 
 # EN
 ## Further rules
