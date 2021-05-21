@@ -9,6 +9,7 @@ Struktur her und keine extra Tools und Programme gebraucht werden.
    in Kleinbuchstaben. Weitere Informationen, Ideen und Anmerkungen jeweils im Modul mit
    Kommentaren einfügen und dokumentieren.
 5. Ein Testfile unter *test* mit dem Namen *twitchname*_test.py in Kleinbuchstaben, falls benötigt.
+6. Der letzte Commit muss bis 10.06.2021 19:30 Uhr gepushed sein.
 
 ## Aufgabe
 Erstelle ein Modul, welches die folgenden Funktionen enthält:
@@ -31,15 +32,20 @@ Im selben Modul wie die Aufgaben folgende Funktionen zusätzlich erstellen:
 4. Zählen aller Zeichen in einem Textdokument mit Leerzeichen
    - (Funktionsname: "count_character_all", Input: Pfad zum Textdokument, Return: Anzahl der Zeichen)
 
+## Fehlerbehandlung
+Da es rein um die Aufgabe geht und den Lösungsweg, vernachlässigen wir die Fehlerbehandlung. 
+Es wird immer davon ausgegangen, dass die übergebenen Parameter im korrekten Wertebereich sind und der übergebene
+Pfad existiert.
+
 ## Bewertung
 An erster Stelle steht der Spaß und eine gemeinsame Lösung am Ende mit euch. Ich bin kein Profi in Python und will 
 mit euch die Kriterien für die Bewertung gemeinsam machen. Diese können sich jederzeit ändern. Also bleibt auf dem 
 Laufenden. Grundlegend stelle ich mir die Abstufungen aber wie folgt vor:
 1. Aufgabe erfüllt/nicht erfüllt
 2. Anforderungen erfüllt und umgesetzt
-3. Verständlicher Code (für mich und dem Chat, Kommentare usw.)
-4. Laufzeit (je schneller, desto besser)
+~~3. Verständlicher Code (für mich und dem Chat, Kommentare usw.)~~
+~~4. Laufzeit (je schneller, desto besser)~~
 5. Nachinstallierte Module über requirements (je weniger, desto besser)
-6. Zeilenanzahl (je weniger, desto besser)
+~~6. Zeilenanzahl (je weniger, desto besser)~~
 
 # Ergebnisse
