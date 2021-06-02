@@ -9,7 +9,7 @@ Struktur her und keine extra Tools und Programme gebraucht werden.
    in Kleinbuchstaben. Weitere Informationen, Ideen und Anmerkungen jeweils im Modul mit
    Kommentaren einfügen und dokumentieren.
 5. Ein Testfile unter *test* mit dem Namen *twitchname*_test.py in Kleinbuchstaben, falls benötigt.
-6. Der letzte Commit muss bis 10.06.2021 19:30 Uhr gepushed sein.
+6. Der letzte Commit muss bis 09.06.2021 19:30 Uhr gepushed sein.
 
 ## Aufgabe
 Erstelle ein Modul, welches die folgenden Funktionen enthält:
