@@ -11,6 +11,7 @@ Struktur her und keine extra Tools und Programme gebraucht werden.
 5. Ein Testfile unter *test* mit dem Namen *twitchname*_test.py in Kleinbuchstaben, falls benötigt.
 6. Der letzte Commit muss bis 09.06.2021 19:30 Uhr gepushed sein.
 
+7. Bitte die fertig entwickelten Funktionen, welche ihr freigeben wollt, in die source/__init__.py eintragen.
 ## Aufgabe
 Erstelle ein Modul, welches die folgenden Funktionen enthält:
 1. Zählen der Wörter in einem Textdokument 
