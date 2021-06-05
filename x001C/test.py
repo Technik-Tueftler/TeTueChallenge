@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint 001C/technik_tueftler.py
+# pylint x001C/technik_tueftler.py
 import timeit, time, operator
 import technik_tueftler
 import s1cc3sT, korbi_korb, fingerprint_invalid
