@@ -82,9 +82,9 @@ def count_words_from_line(file_path, line) -> int:
     try:
         with open(Path(file_path), "r", encoding="utf8") as current_file:
             lines = current_file.readlines()
-            if line != 0 and line <= len(lines): # Step 1
+            if line != 0 and line <= len(lines):  # Step 1
                 replaced = re.sub("[\W](?<![ \n\r])", "", lines[line - 1])  # Step 2
-                x = re.findall("\w+",replaced )  # Step 3
+                x = re.findall("\w+", replaced)  # Step 3
                 counted_words_in_line = len(x)
             else:
                 print("line out of range")
@@ -148,13 +148,13 @@ def count_quotes(file_path) -> int:
 def count_character_all(file_path) -> int:
     """
     IDEA:
-    Step1. Count all ascii elements from element 32 to 126
+    Step 1. Count everything in ASCII TABLE from 32 (Space) to 126 (~)
     """
     counted_character_all = 0
     try:
         with open(Path(file_path), "r", encoding="utf8") as current_file:
             text = current_file.read()
-            x = re.findall("[ -~]", text)  # Step 2
+            x = re.findall("[ -~]", text)  # Step 1
             counted_character_all = len(x)
     except IOError as e:
         print("I/O error" + str((e.errno, e.strerror)))
