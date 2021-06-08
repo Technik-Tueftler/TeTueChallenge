@@ -24,7 +24,7 @@ def count_words(file_path) -> int:
     return counted_word
 
 
-def count_char(file_path) -> int:
+def count_character(file_path) -> int:
     """
     IDEA:
     Step 1. Remove all spaces
