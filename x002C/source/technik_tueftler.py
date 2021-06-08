@@ -69,42 +69,35 @@ def count_words_from_line(path_to_file, specific_line):
 
 
 def count_quotes(path_to_file):
+    """
+    Zählt alle Zitate in einem File, welches mit Pfad der Funktion übergeben wird.
+    Zitate haben eine feste Sequenz an Keyzeichen. Sie beginnen mit einem <"GeradeAnführungszeichenobenDannEinWort>,
+    danach kommt ein beliebig langer Text. Das Satzende wird mit <EinWortGeradeAnführungszeichenoben"> markiert und das
+    Zitat wird am Ende erkannt, wenn <•EinWort> kommt in einer neuen Zeile.
+
+    """
     with open(path_to_file) as file:
         text = file.read()
-    valid_char = re.sub(r"[^A-Za-z\"\n]+", '', text)
+    valid_char = re.sub(r"[^A-Za-z•\"\n]+", '', text)
     valid = valid_char.split("\n")
     count_quote = 0
     start_quote_det = False
     end_quote_det = False
     for element in valid:
-        #print(element)
         if element.startswith("\""):
             if not start_quote_det:
                 start_quote_det = True
-            else:
-                start_quote_det = False
-                end_quote_det = False
+            end_quote_det = False
         elif element.endswith("\""):
             if not end_quote_det:
                 end_quote_det = True
-                print("Zitatende")
-                #print(str(start_quote_det) + " and " + str(end_quote_det))
             else:
                 start_quote_det = False
                 end_quote_det = False
         elif start_quote_det and end_quote_det:
-            print("lala")
-            print(element.startswith("\""))
-            print(element.endswith("\""))
-            if len(element) > 0 and not element.startswith("\"") and not element.endswith("\""):
+            if len(element) > 0 and element.startswith("•"):
                 count_quote += 1
-                start_quote_det = False
-                end_quote_det = False
-                print(f'Test: {element}')
-            elif element.startswith("\""):
-                start_quote_det = True
-            else:
-                start_quote_det = True
+            start_quote_det = False
             end_quote_det = False
     return count_quote
 
@@ -143,6 +136,8 @@ def count_character_all(path_to_file):
     lf_count = re.findall(r"[\n]", valid_char)
     return len(valid_char)-len(lf_count)
 
+def blub():
+    print("lala")
 
 def main():
     pass
