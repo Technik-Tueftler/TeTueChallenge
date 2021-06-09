@@ -1,22 +1,22 @@
 import os
 import sys
 
-def count_words(path_to_file): #done
+def count_words(path_to_file): 
     allLinesInOne = ''.join(readLinesFromFile(path_to_file))
     return len(allLinesInOne.split())
 
-def count_character(path_to_file):#done
+def count_character(path_to_file):
     allLinesInOneWithOutNewLinesandSpaces = ''.join(readLinesFromFile(path_to_file)).replace('\n', '').replace('\r', '').replace(' ','')
     return len(allLinesInOneWithOutNewLinesandSpaces)
 
-def count_lines(path_to_file):#done
+def count_lines(path_to_file):
     return(len(readLinesFromFile(path_to_file)))
 
 # Zusatzaufgaben
-def count_words_from_line(path_to_file, linennumber):#done
+def count_words_from_line(path_to_file, linennumber):
     return len(readLinesFromFile(path_to_file)[linennumber].split())
 
-def count_sentences(path_to_file): #done
+def count_sentences(path_to_file): 
     allLinesInOneWithOutNewLinesandSpaces = ''.join(readLinesFromFile(path_to_file)).replace('\n', '').replace('\r', '').replace(' ','')
     CharArray = [char for char in allLinesInOneWithOutNewLinesandSpaces]
     numberOfSentences = 0
@@ -45,8 +45,6 @@ def count_quotes(path_to_file):
 def count_character_all(path_to_file):
     allLinesInOneWithOutNewLines = ''.join(readLinesFromFile(path_to_file)).replace('\n', '').replace('\r', '')
     return len(allLinesInOneWithOutNewLines)
-
- 
 
 def readLinesFromFile(path_to_file):
     with open(path_to_file, 'r') as file:
