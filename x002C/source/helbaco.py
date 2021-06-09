@@ -41,6 +41,17 @@ def count_words_from_line(filepath, targetline):
         print_n_out(e)
 
 
+def count_sentences(filepath):
+    try:
+        with open(filepath, mode='rt') as file:
+            sentences = re.split(r'[!?]+|(?<!\.)\.(?!\.)', file.read().replace('\n',''))          
+    except (IOError, OSError) as e:
+        print_n_out(e)
+
+    sentences = sentences[:-1]
+    sentence_count = len(sentences)
+    return sentence_count
+
 def count_quotes(filepath):
     # count texts between "
     try:
@@ -69,5 +80,6 @@ print(f'lines: {count_lines(testfile)}')
 print(f'words: {count_words(testfile)}')
 print(f'chars: {count_character(testfile)}')
 print(f'words in line(x): {count_words_from_line(testfile, 14)}')
+print(f'sentences: {count_sentences(testfile)}')
 print(f'quotes: {count_quotes(testfile)}')
 print(f'chars (all): {count_character_all(testfile)}')
