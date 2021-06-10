@@ -162,3 +162,4 @@ def count_character_all(file_path) -> int:
         print("Counted counted characters: " + str(counted_character_all))
 
     return counted_character_all
+

@@ -1,15 +1,10 @@
 import sys
-import os
+import pathlib
 import unittest
 
-#Do akward stuff to import fingerprint_invalid
-directory = os.path.dirname( sys.argv[0])
-path = os.path.join( directory, '..\\source')
-sys.path.insert( 0, path)
-from fingerprint_invalid import *
+sys.path.append(str(pathlib.Path.cwd().parent.parent))
+from x002C.source.fingerprint_invalid import *
 
-# from  ..source.fingerprint_invalid import * # That seems to only work in pycharm.
-# I dont like IDE dependent features. 
 
 # Definition of test cases.
 class TestTetuesChallangeStuff(unittest.TestCase):
@@ -44,13 +39,15 @@ class TestTetuesChallangeStuff(unittest.TestCase):
         self.assertEqual(result, 1)
         print("File contains: " + str(result) + " quotes")
 
+
 # Support Functions
-def get_path_to_testfile(): # because I am to lazy to type that more than once
-    p = os.path.join( os.path.dirname(sys.argv[0]), "..\\test\\testfile.txt")
-    return p
+def get_path_to_testfile():
+    return pathlib.Path.cwd().joinpath("testfile.txt")
+
 
 def main():
     unittest.main()
+
 
 if __name__ == "__main__":
     main()
