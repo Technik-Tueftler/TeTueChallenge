@@ -7,9 +7,8 @@ from x002C.source import count_lines_korbi, count_words_korbi, count_character_k
 from x002C.source import count_words_from_line_korbi, count_sentences_korbi, count_quotes_korbi, count_character_all_korbi
 import pathlib
 
-# print(pathlib.Path.cwd().parent.joinpath("testfile.txt")) Wenn das File eine Ebene höher liegt
-PATH_TO_TEST_FILE = pathlib.Path(r'C:\Users\Korbi\PycharmProjects\TeTueChallenge\x002C\test\testfile.txt')
-print(PATH_TO_TEST_FILE)
+PATH_TO_TEST_FILE = pathlib.Path.cwd().joinpath("testfile.txt")
+
 
 class CountTetuesStuffTestCase(unittest.TestCase):
 

@@ -17,13 +17,13 @@ from x002C.source.helbaco import count_sentences as count_sentences_helba
 from x002C.source.helbaco import count_quotes as count_quotes_helba
 from x002C.source.helbaco import count_character_all as count_character_all_helba
 
-from x002C.source.fingeprint_invalid import count_lines as count_lines_fipri
-from x002C.source.fingeprint_invalid import count_words as count_words_fipri
-from x002C.source.fingeprint_invalid import count_character as count_character_fipri
-from x002C.source.fingeprint_invalid import count_words_from_line as count_words_from_line_fipri
-from x002C.source.fingeprint_invalid import count_sentences as count_sentences_fipri
-from x002C.source.fingeprint_invalid import count_quotes as count_quotes_fipri
-from x002C.source.fingeprint_invalid import count_character_all as count_character_all_fipri
+from x002C.source.fingerprint_invalid import count_lines as count_lines_fipri
+from x002C.source.fingerprint_invalid import count_words as count_words_fipri
+from x002C.source.fingerprint_invalid import count_character as count_character_fipri
+from x002C.source.fingerprint_invalid import count_words_from_line as count_words_from_line_fipri
+from x002C.source.fingerprint_invalid import count_sentences as count_sentences_fipri
+from x002C.source.fingerprint_invalid import count_quotes as count_quotes_fipri
+from x002C.source.fingerprint_invalid import count_character_all as count_character_all_fipri
 
 from x002C.source.korbi_korb import count_lines as count_lines_korbi
 from x002C.source.korbi_korb import count_words as count_words_korbi
