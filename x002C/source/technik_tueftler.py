@@ -136,8 +136,6 @@ def count_character_all(path_to_file):
     lf_count = re.findall(r"[\n]", valid_char)
     return len(valid_char)-len(lf_count)
 
-def blub():
-    print("lala")
 
 def main():
     pass
