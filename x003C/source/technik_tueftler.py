@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from rich.console import Console
+import os
+import sys
+
+from rich import print
 
 
 def main():
-    console = Console()
-    console.print("Hello", "World!", style="bold red")
+    print("Hello, [bold magenta]World[/bold magenta]!", ":vampire:", locals())
 
 
 if __name__ == "__main__":

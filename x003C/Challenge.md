@@ -13,7 +13,27 @@ Struktur her und keine extra Tools und Programme gebraucht werden.
 7. Bitte die fertig entwickelten Funktionen, welche ihr freigeben wollt, in die source/__init__.py eintragen.
 
 ## Aufgabe
-Mit venv\Scripts\activate aktiviert man das 
+Die Aufgabe ist diesmal eine kreative. Als Vorbereitung auf ein kleines Schiffe versenken Spiel, soll eine Funktion
+erstellt werden, welche den grafischen Output erstellt. Das Spielfeld sollte flexibel erstellt werden über x*x. Wird das
+File ausgeführt, soll das Spielfeld aufgebaut werden. Hier ist eure Kreativität gefragt. Easter-Eggs sind natürlich 
+gerne gesehen. Ob ihr das Ganze nur mit [print] Anweisungen oder mit einem Modul wie [rich] erstellt, ist euch 
+überlassen. Einzige Bedingung wäre, dass es über ein File ausführbar wird (source-file oder test-file) und nur print
+oder rich benutzt wird.
+
+## Zusatzaufgabe
+Nach dem ersten Print, soll ein Eingabefenster in der Konsole die Koordinate abfragen, auf die geschossen werden soll.
+Danach soll eine neue Ausgabe des Feldes kommen, auf dem das angegebene Feld optisch verändert wird. 
+
+## Hilfe zu Rich
+GitHub: https://github.com/willmcgugan/rich
+Soweit ich das gesehen habe, geht die Rich-Ausgabe nicht über die PyCharm Konsole. Ausführen könnt ihr das Ganze aber 
+über die Windowskonsole.
+1. Konsole öffnen
+2. In das Projektverzeichnis TeTueChallenge wechseln
+3. Entwicklungsumgebung aktivieren über:
+```venv\Scripts\activate```
+jetzt kann man in den jeweiligen Ordner wechseln und den Code ausführen über:
+```python technik_tueftler.py```
 
 ## Fehlerbehandlung
 Da es rein um die Aufgabe geht und den Lösungsweg, vernachlässigen wir die Fehlerbehandlung. 
