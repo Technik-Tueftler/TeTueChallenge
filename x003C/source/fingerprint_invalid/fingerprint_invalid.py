@@ -17,6 +17,25 @@ def detect_key_press():
     key_pressed = True
     endCurses()
 
+def parseTxtToDrawAbleObject():
+    
+    testString = """
+     _
+    _)`'-.,_
+    """
+    x = 0
+    y = 0
+    points = []
+    for c in testString:
+        if c != " " and c != "\n":
+            curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
+            points.append(GraphicsPoint(x, y, c , curses.color_pair(1) ))
+            x = x + 1
+        else: 
+            if c == "\n":
+                x = 0
+                y = y + 1
+    return points
 
 ###################################################
 
@@ -53,7 +72,8 @@ class Water:
         return c
 
     def Background(self):
-        c = self.toggleChar()
+        #c = self.toggleChar()
+        c = ' '
         background = []
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
         for y in range(curses.LINES -2):
@@ -72,6 +92,7 @@ class Screen:
         self.size = os.get_terminal_size()
         self.cursesScreen = curses.initscr()
         curses.start_color()
+        curses.curs_set(False)
         self.cursesScreen = curses.newwin(curses.LINES -1 ,curses.COLS -1)
         self.cursesScreen.keypad(0)
         curses.noecho()
@@ -84,6 +105,12 @@ class Screen:
         for drawable in self.drawables:
             for p in drawable.get():
                 self.cursesScreen.addch(p.Y, p.X, p.C, p.Color)
+ 
+        testObject = parseTxtToDrawAbleObject()
+        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_CYAN)
+        for p in testObject:
+            self.cursesScreen.addch( p.Y, p.X, p.C, curses.color_pair(2))
+
         self.cursesScreen.refresh()
 
 
