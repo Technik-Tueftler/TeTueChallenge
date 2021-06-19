@@ -17,16 +17,11 @@ def detect_key_press():
     key_pressed = True
     endCurses()
 
-def parseTxtToDrawAbleObject():
-    
-    testString = """
-     _
-    _)`'-.,_
-    """
+def parseTxtToDrawableObject(parseString):
     x = 0
-    y = 0
+    y = -1
     points = []
-    for c in testString:
+    for c in parseString:
         if c != " " and c != "\n":
             curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
             points.append(GraphicsPoint(x, y, c , curses.color_pair(1) ))
@@ -39,12 +34,51 @@ def parseTxtToDrawAbleObject():
 
 ###################################################
 
+
+
 def endCurses():
     curses.nocbreak()
     stdscr = curses.initscr()
     stdscr.keypad(False)
     curses.echo()
     curses.endwin()
+###################################################
+
+class Wave():
+
+    def __init__(self, Direction, Y):
+        waveString = """
+            _
+            _)`'-.,_
+            """
+        self.direction = Direction
+        self.points = parseTxtToDrawableObject(waveString) 
+        if Direction == "left":
+            self.x_offset = curses.COLS + 8
+        if Direction == "right":
+            self.x_offset = -5
+        self.y_offset = Y
+        self.cnt = 0
+
+    def move(self):
+        if self.direction == "left":
+            self.x_offset = self.x_offset - 1
+        else:
+            if self.direction == "right":
+                self.x_offset = self.x_offset + 1
+
+
+    def get(self):
+        if self.cnt == 0:
+            self.cnt = 0
+            self.move()
+        else:
+            self.cnt += 1
+        returnPoints = []
+        for p in self.points:
+            returnPoints.append(GraphicsPoint((p.X + self.x_offset),(p.Y + self.y_offset), p.C, p.Color))
+        return returnPoints
+    
 ###################################################
 class GraphicsPoint:
       def __init__(self, x, y, c, color):
@@ -57,28 +91,18 @@ class GraphicsPoint:
 class Water:
 
     def __init__(self):
-        self.toggle = 1
+        pass
 
     def get(self):
         return self.Background()
 
-    def toggleChar(self):
-        if self.toggle == 1:
-            c = '-'
-            self.toggle = 0
-        else:
-            c = '+'
-            self.toggle = 1
-        return c
-
     def Background(self):
-        #c = self.toggleChar()
         c = ' '
         background = []
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
         for y in range(curses.LINES -2):
             for x in range(curses.COLS -2):
-                background.append(GraphicsPoint(x,y,c, curses.color_pair(1)))
+                background.append(GraphicsPoint(x, y, c, curses.color_pair(1)))
         return background
 
         
@@ -104,12 +128,10 @@ class Screen:
         self.cursesScreen.clear()
         for drawable in self.drawables:
             for p in drawable.get():
-                self.cursesScreen.addch(p.Y, p.X, p.C, p.Color)
+                if p.X < curses.COLS -1:
+                    self.cursesScreen.addch(p.Y, p.X, p.C, curses.color_pair(1))
  
-        testObject = parseTxtToDrawAbleObject()
-        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_CYAN)
-        for p in testObject:
-            self.cursesScreen.addch( p.Y, p.X, p.C, curses.color_pair(2))
+        
 
         self.cursesScreen.refresh()
 
@@ -118,6 +140,7 @@ class Screen:
 
 screen = Screen()
 water = Water()
+wave1 = Wave("left", 5)
 
 def gameLoop():
     screen.draw()
@@ -129,8 +152,9 @@ if __name__ == "__main__":
     thread.start() # keypress detection
 
     screen.addDrawable(water)
+    screen.addDrawable(wave1)
 
     while not key_pressed:
         gameLoop()
-        time.sleep(0.5)
+        time.sleep(0.1)
     curses.endwin()
