@@ -26,22 +26,23 @@ def endCurses():
     stdscr.keypad(False)
     curses.echo()
     curses.endwin()
+###################################################
+class GraphicsPoint:
+      def __init__(self, x, y, c, color):
+            self.X = x
+            self.Y = y
+            self.C = c
+            self.Color = color
 
-#screen.getch()
-
-#curses.endwin()
-
-class Screen:
+###################################################
+class Water:
 
     def __init__(self):
         self.toggle = 1
-        self.size = os.get_terminal_size()
-        self.cursesScreen = curses.initscr()
-        curses.start_color()
-        self.cursesScreen = curses.newwin(curses.LINES -1 ,curses.COLS -1)
-        self.cursesScreen.keypad(0)
-        curses.noecho()
-        
+
+    def get(self):
+        return self.Background()
+
     def toggleChar(self):
         if self.toggle == 1:
             c = '-'
@@ -51,18 +52,46 @@ class Screen:
             self.toggle = 1
         return c
 
-    def draw(self):
+    def Background(self):
         c = self.toggleChar()
-        self.cursesScreen.clear()
+        background = []
         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLUE)
         for y in range(curses.LINES -2):
             for x in range(curses.COLS -2):
-                self.cursesScreen.addch(y,x, c, curses.color_pair(1))
+                background.append(GraphicsPoint(x,y,c, curses.color_pair(1)))
+        return background
+
+        
+
+###################################################
+
+class Screen:
+
+    def __init__(self):
+        self.toggle = 1
+        self.drawables = []
+        self.size = os.get_terminal_size()
+        self.cursesScreen = curses.initscr()
+        curses.start_color()
+        self.cursesScreen = curses.newwin(curses.LINES -1 ,curses.COLS -1)
+        self.cursesScreen.keypad(0)
+        curses.noecho()
+    
+    def addDrawable(self, obj):
+        self.drawables.append(obj)
+
+    def draw(self):
+        self.cursesScreen.clear()
+        for drawable in self.drawables:
+            for p in drawable.get():
+                self.cursesScreen.addch(p.Y, p.X, p.C, p.Color)
         self.cursesScreen.refresh()
+
 
 ###################################################
 
 screen = Screen()
+water = Water()
 
 def gameLoop():
     screen.draw()
@@ -73,7 +102,9 @@ if __name__ == "__main__":
     thread = Thread(target = detect_key_press)
     thread.start() # keypress detection
 
+    screen.addDrawable(water)
+
     while not key_pressed:
         gameLoop()
-        time.sleep(0.2)
+        time.sleep(0.5)
     curses.endwin()
