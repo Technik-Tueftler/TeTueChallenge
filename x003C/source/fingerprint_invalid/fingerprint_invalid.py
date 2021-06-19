@@ -9,6 +9,13 @@ from threading import Thread
 # async Keypress detection 
 
 key_pressed = False
+curses.initscr()  
+curses.start_color()
+curses.curs_set(False)
+curses.noecho()
+
+
+
 
 def detect_key_press():
     global key_pressed
@@ -44,6 +51,15 @@ def endCurses():
     curses.endwin()
 ###################################################
 
+class GraphicsPoint:
+      def __init__(self, x, y, c, color):
+            self.X = x
+            self.Y = y
+            self.C = c
+            self.Color = color
+
+###################################################
+
 class Wave():
 
     def __init__(self, Direction, Y):
@@ -68,24 +84,16 @@ class Wave():
                 self.x_offset = self.x_offset + 1
 
 
+
     def get(self):
-        if self.cnt == 0:
-            self.cnt = 0
-            self.move()
-        else:
-            self.cnt += 1
+        self.move()
         returnPoints = []
         for p in self.points:
             returnPoints.append(GraphicsPoint((p.X + self.x_offset),(p.Y + self.y_offset), p.C, p.Color))
         return returnPoints
-    
-###################################################
-class GraphicsPoint:
-      def __init__(self, x, y, c, color):
-            self.X = x
-            self.Y = y
-            self.C = c
-            self.Color = color
+
+
+
 
 ###################################################
 class Water:
@@ -105,7 +113,7 @@ class Water:
                 background.append(GraphicsPoint(x, y, c, curses.color_pair(1)))
         return background
 
-        
+   
 
 ###################################################
 
@@ -115,11 +123,8 @@ class Screen:
         self.drawables = []
         self.size = os.get_terminal_size()
         self.cursesScreen = curses.initscr()
-        curses.start_color()
-        curses.curs_set(False)
         self.cursesScreen = curses.newwin(curses.LINES -1 ,curses.COLS -1)
         self.cursesScreen.keypad(0)
-        curses.noecho()
     
     def addDrawable(self, obj):
         self.drawables.append(obj)
@@ -128,33 +133,47 @@ class Screen:
         self.cursesScreen.clear()
         for drawable in self.drawables:
             for p in drawable.get():
-                if p.X < curses.COLS -1:
+                if p.X < curses.COLS -2 and p.X >= 0:
                     self.cursesScreen.addch(p.Y, p.X, p.C, curses.color_pair(1))
- 
-        
-
         self.cursesScreen.refresh()
 
 
 ###################################################
 
-screen = Screen()
-water = Water()
-wave1 = Wave("left", 5)
+class Game:
 
-def gameLoop():
-    screen.draw()
+    def __init__(self):
+        self.screen = Screen()
+        self.water = Water()
+        self.wave1 = Wave("left", 5)
+        self.screen.addDrawable(self.water)
+        self.screen.addDrawable(self.wave1)
+        
+
+
+    def gameLoop(self):
+        self.logicLoop()
+        self.graphicsLoop()
     
-    
-    
+    def logicLoop(self):
+        if self.wave1.x_offset == -10:
+            del self.wave1
+            self.wave1 = Wave("left", 5)
+            self.screen.addDrawable(self.wave1)
+
+    def graphicsLoop(self):
+        self.screen.draw()
+
+
+
 if __name__ == "__main__":
     thread = Thread(target = detect_key_press)
     thread.start() # keypress detection
 
-    screen.addDrawable(water)
-    screen.addDrawable(wave1)
+
+    game = Game()
 
     while not key_pressed:
-        gameLoop()
+        game.gameLoop()
         time.sleep(0.1)
     curses.endwin()
