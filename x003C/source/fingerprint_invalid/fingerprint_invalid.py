@@ -22,6 +22,7 @@ def detect_key_press():
 
 def endCurses():
     curses.nocbreak()
+    stdscr = curses.initscr()
     stdscr.keypad(False)
     curses.echo()
     curses.endwin()
@@ -36,29 +37,27 @@ class Screen:
         self.toggle = 1
         self.size = os.get_terminal_size()
         self.cursesScreen = curses.initscr()
-        #self.cursesScreen = curses.newwin(self.size.lines,self.size.columns)
+        curses.start_color()
+        self.cursesScreen = curses.newwin(curses.LINES -1 ,curses.COLS -1)
         self.cursesScreen.keypad(0)
         curses.noecho()
         
-    def toggleScreen(self):
-        self.lines = [] 
+    def toggleChar(self):
         if self.toggle == 1:
             c = '-'
             self.toggle = 0
         else:
             c = '+'
             self.toggle = 1
-        for _ in range(self.size.lines):
-            line = [c] * (self.size.columns - 1)
-            self.lines.append(line)
+        return c
 
     def draw(self):
-        self.toggleScreen()
+        c = self.toggleChar()
         self.cursesScreen.clear()
-        for line in self.lines:
-            line = ''.join(line)
-            l = len(line)
-            self.cursesScreen.addstr((line))
+        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLUE)
+        for y in range(curses.LINES -2):
+            for x in range(curses.COLS -2):
+                self.cursesScreen.addch(y,x, c, curses.color_pair(1))
         self.cursesScreen.refresh()
 
 ###################################################
@@ -76,5 +75,5 @@ if __name__ == "__main__":
 
     while not key_pressed:
         gameLoop()
-        time.sleep(1)
+        time.sleep(0.2)
     curses.endwin()
