@@ -55,7 +55,7 @@ class Water:
     def Background(self):
         c = self.toggleChar()
         background = []
-        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLUE)
+        curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
         for y in range(curses.LINES -2):
             for x in range(curses.COLS -2):
                 background.append(GraphicsPoint(x,y,c, curses.color_pair(1)))
@@ -68,7 +68,6 @@ class Water:
 class Screen:
 
     def __init__(self):
-        self.toggle = 1
         self.drawables = []
         self.size = os.get_terminal_size()
         self.cursesScreen = curses.initscr()
