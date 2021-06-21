@@ -59,16 +59,9 @@ class GraphicsPoint:
             self.Color = color
 
 ###################################################
-
-class Wave():
-
-    def __init__(self, Direction, Y):
-        waveString = """
-            _
-            _)`'-.,_
-            """
+class MoveAbleObject:
+    def __init__(self, Direction, Y): 
         self.direction = Direction
-        self.points = parseTxtToDrawableObject(waveString) 
         if Direction == "left":
             self.x_offset = curses.COLS + 8
         if Direction == "right":
@@ -83,14 +76,39 @@ class Wave():
             if self.direction == "right":
                 self.x_offset = self.x_offset + 1
 
-
-
     def get(self):
         self.move()
         returnPoints = []
         for p in self.points:
             returnPoints.append(GraphicsPoint((p.X + self.x_offset),(p.Y + self.y_offset), p.C, p.Color))
         return returnPoints
+
+    
+###################################################
+class cloud(MoveAbleObject):
+
+    def __init__(self, Direction, Y): 
+        super().__init__(Direction, Y)
+        cloudString = """
+            ,((_'-. _
+        _(   (_ ) ),--.
+        (  (  __   _)  )-._
+        """
+        self.points = parseTxtToDrawableObject(cloudString) 
+
+
+
+###################################################
+class Wave(MoveAbleObject):
+
+    def __init__(self, Direction, Y):
+        super().__init__(Direction, Y)
+        waveString = """
+            _
+            _)`'-.,_
+            """
+        self.points = parseTxtToDrawableObject(waveString) 
+
 
 
 
@@ -145,10 +163,11 @@ class Game:
     def __init__(self):
         self.screen = Screen()
         self.water = Water()
-        self.wave1 = Wave("left", 5)
+        self.wave = Wave("left", 3)
+        self.cloud = cloud("left", 7)
         self.screen.addDrawable(self.water)
-        self.screen.addDrawable(self.wave1)
-        
+        self.screen.addDrawable(self.cloud)
+        self.screen.addDrawable(self.wave)
 
 
     def gameLoop(self):
@@ -156,10 +175,10 @@ class Game:
         self.graphicsLoop()
     
     def logicLoop(self):
-        if self.wave1.x_offset == -10:
-            del self.wave1
-            self.wave1 = Wave("left", 5)
-            self.screen.addDrawable(self.wave1)
+        if self.cloud.x_offset == -10:
+            del self.cloud
+            self.cloud = cloud("left", 5)
+            self.screen.addDrawable(self.cloud)
 
     def graphicsLoop(self):
         self.screen.draw()
