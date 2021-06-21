@@ -1,4 +1,4 @@
-import random
+import locale
 import time
 
 import curses
@@ -24,14 +24,13 @@ def detect_key_press():
     key_pressed = True
     endCurses()
 
-def parseTxtToDrawableObject(parseString):
+def parseTxtToDrawableObject(parseString, Color):
     x = 0
     y = -1
     points = []
     for c in parseString:
         if c != " " and c != "\n":
-            curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
-            points.append(GraphicsPoint(x, y, c , curses.color_pair(1) ))
+            points.append(GraphicsPoint(x, y, c , Color ))
             x = x + 1
         else: 
             if c == "\n":
@@ -59,7 +58,15 @@ class GraphicsPoint:
             self.Color = color
 
 ###################################################
-class MoveAbleObject:
+class DrawableObject:
+    def get(self):
+        returnPoints = []
+        for p in self.points:
+            returnPoints.append(GraphicsPoint((p.X + self.x_offset),(p.Y + self.y_offset), p.C, p.Color))
+        return returnPoints   
+
+###################################################
+class MoveAbleObject(DrawableObject):
     def __init__(self, Direction, Y): 
         self.direction = Direction
         if Direction == "left":
@@ -78,10 +85,7 @@ class MoveAbleObject:
 
     def get(self):
         self.move()
-        returnPoints = []
-        for p in self.points:
-            returnPoints.append(GraphicsPoint((p.X + self.x_offset),(p.Y + self.y_offset), p.C, p.Color))
-        return returnPoints
+        return super().get()
 
     
 ###################################################
@@ -89,12 +93,13 @@ class cloud(MoveAbleObject):
 
     def __init__(self, Direction, Y): 
         super().__init__(Direction, Y)
+        curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_CYAN)
         cloudString = """
             ,((_'-. _
         _(   (_ ) ),--.
         (  (  __   _)  )-._
         """
-        self.points = parseTxtToDrawableObject(cloudString) 
+        self.points = parseTxtToDrawableObject(cloudString, curses.color_pair(2)) 
 
 
 
@@ -103,11 +108,8 @@ class Wave(MoveAbleObject):
 
     def __init__(self, Direction, Y):
         super().__init__(Direction, Y)
-        waveString = """
-            _
-            _)`'-.,_
-            """
-        self.points = parseTxtToDrawableObject(waveString) 
+        waveString = u'hello わたし'
+        self.points = parseTxtToDrawableObject(waveString, curses.color_pair(1)) 
 
 
 
@@ -152,7 +154,7 @@ class Screen:
         for drawable in self.drawables:
             for p in drawable.get():
                 if p.X < curses.COLS -2 and p.X >= 0:
-                    self.cursesScreen.addch(p.Y, p.X, p.C, curses.color_pair(1))
+                    self.cursesScreen.addch(p.Y, p.X, p.C, p.Color)
         self.cursesScreen.refresh()
 
 
@@ -161,6 +163,7 @@ class Screen:
 class Game:
 
     def __init__(self):
+        locale.setlocale(locale.LC_ALL,"")
         self.screen = Screen()
         self.water = Water()
         self.wave = Wave("left", 3)
