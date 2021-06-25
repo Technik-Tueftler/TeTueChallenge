@@ -130,11 +130,12 @@ class GraphicsPoint:
 
 ###################################################
 class DrawableObject:
-    def __init__(self, Layer, objString, X, Y, Color, opaque = False):
+    def __init__(self, Layer, objString, X, Y, color, opaque = False):
         self.x_offset = X
         self.y_offset = Y
         self.layer = Layer
-        self.points = parseTxtToDrawableObject(objString, Color,opaque)
+        self.Color = color
+        self.points = parseTxtToDrawableObject(objString, color,opaque)
         # find max
         self.width  = 0
         self.height  = 0
@@ -143,7 +144,7 @@ class DrawableObject:
                 self.width = p.X
             if p.Y > self.height:
                 self.height = p.Y
-        Screen.addDrawable(self)
+        #Screen.addDrawable(self)
 
     def get(self):
         returnPoints = []
@@ -154,6 +155,9 @@ class DrawableObject:
     def placeAt(self, X , Y):
         self.x_offset = X
         self.y_offset = Y
+
+    def getChilds(self):
+        return []
 
 
 ###################################################
@@ -208,7 +212,12 @@ class Background():
         else:
             self.cnt = 0
             retval = self.Background()
-            return retval  
+            return retval 
+
+    # lazy workaround, should inherit from drawable object instead
+    def getChilds(self):
+        return []
+
 ###################################################
 
 class Easterhenn(DrawableObject):
@@ -277,14 +286,15 @@ class Screen:
     cursesScreen.keypad(0)
    
     def addDrawable(obj):
-        if isinstance(obj, list):
-            for o in obj:
-               Screen.layers[obj.layer].append(o)
-        else:
-            Screen.layers[obj.layer].append(obj)
+        Screen.layers[obj.layer].append(obj)
+        for child in obj.getChilds():
+            Screen.layers[obj.layer].append(child)
 
     def removeDrawable(obj):
         Screen.layers[obj.layer].remove(obj)
+        for child in obj.getChilds():
+            Screen.layers[obj.layer].remove(child)
+
 
     def draw():
         Screen.cursesScreen.erase()
@@ -310,13 +320,19 @@ class Cloud(MoveAbleObject):
         cloudsStrings.append(cloudString3)
         cloudString = cloudsStrings[random.randrange(0, len(cloudsStrings), 1)]
 
-        super().__init__( CloudLayer, cloudString, X, Y, COLOR_CLOUD, Direction, 10, True)
+        super().__init__( CloudLayer, cloudString, X, Y, COLOR_CLOUD, Direction, 10, False)
 
         # construct a shadow for the cloud
-        self.shadow = MoveAbleObject(CloudLayer, cloudString, X-3,Y + self.height + 3, COLOR_SHADOW , Direction, 10, True)
+        self.shadow = MoveAbleObject(CloudLayer, cloudString, X-3,Y + self.height + 3, COLOR_BROWN , Direction, 10, True)
+        #Screen.addDrawable(self.shadow)
 
     def __del__(self):
         del self.shadow
+
+    def getChilds(self):
+        l = []
+        l.append(self.shadow)
+        return l
 ###################################################
 class Island(DrawableObject):
 
@@ -340,6 +356,7 @@ class Game:
 
         #Create self moving clouds and place them initially out of sight
         self.clouds = []
+
         cloud1 = Cloud(-100, -100, "left")
         cloud2 = Cloud(-100, -100, "left")
         cloud3 = Cloud(-100, -100, "left")
@@ -348,6 +365,11 @@ class Game:
         self.clouds.append(cloud2)
         self.clouds.append(cloud3)
         self.clouds.append(cloud4)
+        Screen.addDrawable(cloud1)
+        Screen.addDrawable(cloud2)
+        Screen.addDrawable(cloud3)
+        Screen.addDrawable(cloud4)
+
 
     def gameLoop(self):
         time.sleep(self.updateIntervall)
@@ -359,7 +381,6 @@ class Game:
 
     def cloudLogic(self):
         # create new clouds after old ones have left the screen
-        tempNewClouds = []
         for i in range(len(self.clouds)):
             cloud = self.clouds[i]
             if cloud.x_offset <= -10:
@@ -367,10 +388,9 @@ class Game:
                 newY = random.randrange(5, curses.LINES - 5, 1)
                 Screen.removeDrawable(cloud)
                 newCloud = Cloud(newX, newY, "left")
-                tempNewClouds.append(newCloud)
-        for cloud in self.clouds:
-            del cloud
-        self.clouds = tempNewClouds
+                Screen.addDrawable(newCloud)
+                self.clouds[i] = newCloud
+
 
     def graphicsLoop(self):
         Screen.draw()
@@ -385,7 +405,7 @@ def Main(scr):
     curses.init_pair(COLOR_WATER, 27, 33) # lightBlue/Blue for water
     curses.init_pair(COLOR_CLOUD, 253, 33) # white on blue for clouds
     curses.init_pair(COLOR_SHADOW, 242,33) #gray on blue for cloudshadow
-    curses.init_pair(COLOR_BROWN, 96, 33) #
+    curses.init_pair(COLOR_BROWN, 196, 33) #
 
     game = Game()
 
@@ -403,4 +423,3 @@ if __name__ == "__main__":
 
 
 
-    
