@@ -374,6 +374,17 @@ class Game:
         self.updateIntervall = 0.25
         self.cnt = 0
 
+        curses.initscr()  
+        curses.start_color()
+        curses.curs_set(False)
+        curses.noecho()
+
+        curses.init_pair(COLOR_WATER, 27, 33) # lightBlue/Blue for water
+        curses.init_pair(COLOR_CLOUD, 253, 33) # white on blue for clouds
+        curses.init_pair(COLOR_SHADOW, 233,33) #gray on blue for cloudshadow
+        curses.init_pair(COLOR_BROWN, 196, 33) #
+        curses.init_pair(COLOR_FRAME, 221, 33) #
+
         Screen.addDrawable(Frame(curses.COLS-2,curses.LINES-1,'#'))
         Screen.addDrawable(Easterhenn())
 
@@ -420,16 +431,7 @@ class Game:
 
 def Main(scr):
 
-    curses.initscr()  
-    curses.start_color()
-    curses.curs_set(False)
-    curses.noecho()
 
-    curses.init_pair(COLOR_WATER, 27, 33) # lightBlue/Blue for water
-    curses.init_pair(COLOR_CLOUD, 253, 33) # white on blue for clouds
-    curses.init_pair(COLOR_SHADOW, 233,33) #gray on blue for cloudshadow
-    curses.init_pair(COLOR_BROWN, 196, 33) #
-    curses.init_pair(COLOR_FRAME, 221, 33) #
 
     game = Game()
 
