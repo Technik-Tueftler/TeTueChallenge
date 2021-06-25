@@ -70,7 +70,9 @@ r"(_)_))  "
 
 BackGroundLayer = 0
 EastereggLayer = 1
-IslandLayer = 2
+
+ShadowLayer = 2
+IslandLayer = 3
 CloudLayer = 10
 
 COLOR_WATER = 1
@@ -81,7 +83,7 @@ COLOR_BROWN = 4
 ###################################################
 
 
-def parseTxtToDrawableObject(parseString, Color, opaque = False):
+def parseTxtToDrawableObject(parseString, Color, opaque, removeChar = ''):
     x = -1
     y = 0
     points = []
@@ -101,6 +103,11 @@ def parseTxtToDrawableObject(parseString, Color, opaque = False):
                             points.append(GraphicsPoint(x, y, c , Color ))
                 else:
                         points.append(GraphicsPoint(x, y, c , Color ))
+    retpoints = []
+    if removeChar != '':
+        for point in points:
+            if point.C != removeChar:
+                retpoints.append(point)
     return points
 
 ###################################################
@@ -320,10 +327,10 @@ class Cloud(MoveAbleObject):
         cloudsStrings.append(cloudString3)
         cloudString = cloudsStrings[random.randrange(0, len(cloudsStrings), 1)]
 
-        super().__init__( CloudLayer, cloudString, X, Y, COLOR_CLOUD, Direction, 10, False)
+        super().__init__( CloudLayer, cloudString, X, Y, COLOR_CLOUD, Direction, 3, True)
 
         # construct a shadow for the cloud
-        self.shadow = MoveAbleObject(CloudLayer, cloudString, X-3,Y + self.height + 3, COLOR_BROWN , Direction, 10, True)
+        self.shadow = MoveAbleObject( ShadowLayer, cloudString, X-3,Y + self.height + 3, COLOR_SHADOW , Direction, 3, False)
         #Screen.addDrawable(self.shadow)
 
     def __del__(self):
@@ -347,8 +354,11 @@ class Game:
         self.updateIntervall = 0.25
         self.cnt = 0
 
-        self.e = Easterhenn()
-        #self.island = Island(IslandLayer, 3, curses.LINES - 12)
+
+        Screen.addDrawable(Easterhenn())
+
+        # mmh, island does not look so cool. maybe completly remove
+        #Screen.addDrawable(Island(IslandLayer, 3, curses.LINES - 12))
 
         locale.setlocale(locale.LC_ALL,"")
         self.background = Background()
@@ -357,18 +367,11 @@ class Game:
         #Create self moving clouds and place them initially out of sight
         self.clouds = []
 
-        cloud1 = Cloud(-100, -100, "left")
-        cloud2 = Cloud(-100, -100, "left")
-        cloud3 = Cloud(-100, -100, "left")
-        cloud4 = Cloud(-100, -100, "left")
-        self.clouds.append(cloud1)
-        self.clouds.append(cloud2)
-        self.clouds.append(cloud3)
-        self.clouds.append(cloud4)
-        Screen.addDrawable(cloud1)
-        Screen.addDrawable(cloud2)
-        Screen.addDrawable(cloud3)
-        Screen.addDrawable(cloud4)
+        for _ in range(4):
+            cloud1 = Cloud(-100, -100, "left")
+            self.clouds.append(cloud1)
+            Screen.addDrawable(cloud1)
+
 
 
     def gameLoop(self):
@@ -385,7 +388,7 @@ class Game:
             cloud = self.clouds[i]
             if cloud.x_offset <= -10:
                 newX = curses.COLS + random.randrange(0, curses.COLS, 1)
-                newY = random.randrange(5, curses.LINES - 5, 1)
+                newY = random.randrange(5, curses.LINES - ( 2 * cloud.height) - 4, 1)
                 Screen.removeDrawable(cloud)
                 newCloud = Cloud(newX, newY, "left")
                 Screen.addDrawable(newCloud)
@@ -404,7 +407,7 @@ def Main(scr):
 
     curses.init_pair(COLOR_WATER, 27, 33) # lightBlue/Blue for water
     curses.init_pair(COLOR_CLOUD, 253, 33) # white on blue for clouds
-    curses.init_pair(COLOR_SHADOW, 242,33) #gray on blue for cloudshadow
+    curses.init_pair(COLOR_SHADOW, 233,33) #gray on blue for cloudshadow
     curses.init_pair(COLOR_BROWN, 196, 33) #
 
     game = Game()
