@@ -79,10 +79,10 @@ COLOR_WATER = 1
 COLOR_CLOUD = 2
 COLOR_SHADOW = 3
 COLOR_BROWN = 4
+COLOR_FRAME = 5
+
 
 ###################################################
-
-
 def parseTxtToDrawableObject(parseString, Color, opaque, removeChar = ''):
     x = -1
     y = 0
@@ -151,7 +151,7 @@ class DrawableObject:
                 self.width = p.X
             if p.Y > self.height:
                 self.height = p.Y
-        #Screen.addDrawable(self)
+
 
     def get(self):
         returnPoints = []
@@ -165,6 +165,26 @@ class DrawableObject:
 
     def getChilds(self):
         return []
+
+
+###################################################
+class Frame(DrawableObject):
+    def __init__(self, X, Y, C):
+        self.points = []
+        self.layer = 100
+        for y in range(Y):
+            for x in range(X):
+                if y == 0:
+                    self.points.append(GraphicsPoint(x,y,C,COLOR_FRAME))
+                else:
+                    if y == (Y-1):
+                        self.points.append(GraphicsPoint(x,y,C,COLOR_FRAME))
+                    else:
+                        if (x == 0) | (x == X-1):
+                            self.points.append(GraphicsPoint(x,y,C,COLOR_FRAME))
+    def get(self):
+        return self.points
+
 
 
 ###################################################
@@ -282,7 +302,7 @@ class Water:
 
 class Screen:
     layers = []
-    for _ in range(100):
+    for _ in range(150):
         layers.append([])
        
     drawables = []
@@ -354,7 +374,7 @@ class Game:
         self.updateIntervall = 0.25
         self.cnt = 0
 
-
+        Screen.addDrawable(Frame(curses.COLS-2,curses.LINES-1,'#'))
         Screen.addDrawable(Easterhenn())
 
         # mmh, island does not look so cool. maybe completly remove
@@ -409,6 +429,7 @@ def Main(scr):
     curses.init_pair(COLOR_CLOUD, 253, 33) # white on blue for clouds
     curses.init_pair(COLOR_SHADOW, 233,33) #gray on blue for cloudshadow
     curses.init_pair(COLOR_BROWN, 196, 33) #
+    curses.init_pair(COLOR_FRAME, 221, 33) #
 
     game = Game()
 
