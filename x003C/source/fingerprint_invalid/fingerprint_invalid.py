@@ -6,28 +6,6 @@ import random
 import os
 from threading import Thread  
 from curses import wrapper as cursesWrapper
-###################################################
-class KeyboardController():
-    
-    def __init__(self):
-        thread = Thread(target = self.detect_key_press)
-        thread.start()
-        self.key_pressed = False
-
-
-    def detect_key_press(self):
-        self.key_pressed = False
-        stdscr = curses.initscr()
-        self.key = stdscr.getch()
-        self.key_pressed = True
-
-    def getKey(self):
-        thread = Thread(target = self.detect_key_press)
-        thread.start()
-        return self.key
-
-    def getKeyPressed(self):
-        return self.key_pressed
 
 
 
@@ -45,16 +23,6 @@ r"     \\______/      \n"
 r"       _|_\\_         "
 )
 
-tetueString = (
-r'\__   __/(  ____ \ __   __/|\     /|(  ____ \    (  ____ \|\     /|(  ___  )( \      ( \      (  ____ \( (    /|(  ____ \(  ____ \ \n'
-r'   ) (   | (    \/   ) (   | )   ( || (    \/    | (    \/| )   ( || (   ) || (      | (      | (    \/|  \  ( || (    \/| (    \/ \n'
-r'   | |   | (__       | |   | |   | || (__        | |      | (___) || (___) || |      | |      | (__    |   \ | || |      | (__     \n'
-r'   | |   |  __)      | |   | |   | ||  __)       | |      |  ___  ||  ___  || |      | |      |  __)   | (\ \) || | ____ |  __)    \n'
-r'   | |   | (         | |   | |   | || (          | |      | (   ) || (   ) || |      | |      | (      | | \   || | \_  )| (       \n'
-r'   | |   | (____/\   | |   | (___) || (____/\    | (____/\| )   ( || )   ( || (____/\| (____/\| (____/\| )  \  || (___) || (____/\ \n'
-r'   )_(   (_______/   )_(   (_______)(_______/    (_______/|/     \||/     \|(_______/(_______/(_______/|/    )_)(_______)(_______/ '
-)
-
 cloudString1 = (  
 r"    ____ _  \n"
 r"  _(    `.) \n"
@@ -62,6 +30,7 @@ r" ( (    ) ))\n"
 r"( (   )  _) \n"
 r" '.__)--'   "
 )
+
 cloudString2 = (
 r"  _ __   \n"
 r" ( (  )`.\n"
@@ -94,6 +63,28 @@ COLOR_FRAME = 5
 COLOR_CROSSHAIR = 6
 COLOR_AIRPLANE = 7
 COLOR_EXPLOSION = 8
+###################################################
+class KeyboardController():
+    
+    def __init__(self):
+        thread = Thread(target = self.detect_key_press)
+        thread.start()
+        self.key_pressed = False
+
+
+    def detect_key_press(self):
+        self.key_pressed = False
+        stdscr = curses.initscr()
+        self.key = stdscr.getch()
+        self.key_pressed = True
+
+    def getKey(self):
+        thread = Thread(target = self.detect_key_press)
+        thread.start()
+        return self.key
+
+    def getKeyPressed(self):
+        return self.key_pressed
 
 ###################################################
 def parseTxtToPoints(parseString, Color, opaque, removeChar = ''):
@@ -216,7 +207,7 @@ class MoveAbleObject(DrawableObject):
         return super().get()
 
 ###################################################
-class Background():
+class Background(DrawableObject):
 
     def __init__(self):
         self.cnt = 0
@@ -240,7 +231,6 @@ class Background():
                 self.oldBackground = background
                 return background
 
-
     def get(self):
         if self.cnt < self.UpdateMultiplikator:
             self.cnt += 1
@@ -250,9 +240,7 @@ class Background():
             retval = self.Background()
             return retval 
 
-    # lazy workaround, should inherit from drawable object instead
-    def getChilds(self):
-        return []
+
 
 ###################################################
 
@@ -349,10 +337,8 @@ class Screen:
             if layers[i] == []:
                 continue
             for drawable in layers[i]:
-                try:
+                if isinstance( drawable, MoveAbleObject):
                     drawable.move()
-                except:
-                    pass
 
         layers = Screen.layers.copy()
         for i in range(len(layers)):
@@ -467,7 +453,7 @@ class AirPlane(MoveAbleObject):
         planeString = (
 r" (\__.-. | \n"
 r" == ===_]+ \n"
-r"   //    | \n"
+r"         | \n"
     )
         super().__init__(AirplaneLayer, planeString, X , tY - Y, COLOR_AIRPLANE, "right", 3, False )
         self.bomb = Bomb(AirplaneLayer,X+2,tY-Y+1,COLOR_AIRPLANE,"right",3,tX,tY)
