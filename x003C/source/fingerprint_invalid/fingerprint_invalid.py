@@ -3,10 +3,8 @@ import time
 import sys
 import curses
 import random
-from enum import Enum
 import os
 from threading import Thread  
-import threading
 from curses import wrapper as cursesWrapper
 ###################################################
 class KeyboardController():
@@ -57,21 +55,6 @@ r'   | |   | (____/\   | |   | (___) || (____/\    | (____/\| )   ( || )   ( || 
 r'   )_(   (_______/   )_(   (_______)(_______/    (_______/|/     \||/     \|(_______/(_______/(_______/|/    )_)(_______)(_______/ '
 )
 
-islandString = (
-r"           __        \n"                  
-r"          /. _\      \n"                    
-r"     .--.|/_/__      \n"                            
-r"    ''.--o/___  \    \n"
-r"     /.'o|_o  '.|    \n"
-r"    |/   |_|  ~'     \n"
-r"    '    |_|         \n"
-r"         |_|         \n"
-r"      ___|_|______   \n"
-r"  .'':. .|_| :. ..\  \n"
-r"/:.  .:::|_|.\ .   \ "
-)
-
-
 cloudString1 = (  
 r"    ____ _  \n"
 r"  _(    `.) \n"
@@ -113,7 +96,7 @@ COLOR_AIRPLANE = 7
 COLOR_EXPLOSION = 8
 
 ###################################################
-def parseTxtToDrawableObject(parseString, Color, opaque, removeChar = ''):
+def parseTxtToPoints(parseString, Color, opaque, removeChar = ''):
     x = -1
     y = 0
     points = []
@@ -141,9 +124,6 @@ def parseTxtToDrawableObject(parseString, Color, opaque, removeChar = ''):
     return points
 
 ###################################################
-
-
-
 def endCurses():
     curses.nocbreak()
     stdscr = curses.initscr()
@@ -164,7 +144,6 @@ class GraphicsPoint:
             return (self.X == other.X) and ( self.Y == other.Y)
         return False
    
-
 ###################################################
 class DrawableObject():
     def __init__(self, Layer, objString, X, Y, color, opaque = False):
@@ -173,7 +152,7 @@ class DrawableObject():
         self.y_offset = Y
         self.layer = Layer
         self.Color = color
-        self.points = parseTxtToDrawableObject(objString, color,opaque)
+        self.points = parseTxtToPoints(objString, color,opaque)
         # find max
         self.width  = 0
         self.height  = 0
@@ -226,7 +205,6 @@ class MoveAbleObject(DrawableObject):
         self.speed = Speed
         self.direction = Direction
        
-
     def move(self):
         if self.direction == "left":
             self.x_offset = self.x_offset - self.speed
@@ -300,7 +278,6 @@ class Easterhenn(DrawableObject):
         if self.cnt == 10:
             self.cnt = 0
         return retval
-
 
 ###################################################
 
@@ -413,7 +390,7 @@ class Cloud(MoveAbleObject):
         return l
 ###################################################
 
-class Explosion():
+class Explosion(DrawableObject):
     def __init__(self, X, Y):
         explosionString1 = (
   r" .---. \n"
@@ -425,8 +402,8 @@ class Explosion():
   r" (\   /)   "
 )
         self.layer = ExplosionLayer
-        self.frame1 = DrawableObject(ExplosionLayer, explosionString1,X-3,Y, COLOR_EXPLOSION, False)
-        self.frame2 = DrawableObject(ExplosionLayer, explosionString2,X-4,Y, COLOR_EXPLOSION, False)
+        self.frame1 = DrawableObject(ExplosionLayer, explosionString1,X-3,Y-1, COLOR_EXPLOSION, False)
+        self.frame2 = DrawableObject(ExplosionLayer, explosionString2,X-4,Y-1, COLOR_EXPLOSION, False)
         self.cnt = 0
         self.fnr = 1
 
@@ -441,17 +418,6 @@ class Explosion():
             self.fnr = 1
             self.cnt += 1 
             return self.frame2.get()     
-
-     
-
-    def getChilds(self):
-        return []
-
-###################################################
-class Island(DrawableObject):
-
-    def __init__(self, Layer, X, Y):
-        super().__init__(Layer, islandString, X, Y, COLOR_BROWN, False)
 
 ###################################################
 class Bomb(MoveAbleObject):
@@ -491,8 +457,6 @@ class Bomb(MoveAbleObject):
         else:
             super().move()
 
-
-
 ###################################################
 class AirPlane(MoveAbleObject):
     def __init__(self, X, Y, tX,tY):
@@ -503,7 +467,7 @@ class AirPlane(MoveAbleObject):
         planeString = (
 r" (\__.-. | \n"
 r" == ===_]+ \n"
-r"         | \n"
+r"   //    | \n"
     )
         super().__init__(AirplaneLayer, planeString, X , tY - Y, COLOR_AIRPLANE, "right", 3, False )
         self.bomb = Bomb(AirplaneLayer,X+2,tY-Y+1,COLOR_AIRPLANE,"right",3,tX,tY)
@@ -525,8 +489,6 @@ r"         | \n"
             Screen.removeDrawable(self)
         return super().get()
 
-
-        
 ###################################################
 class Game:
 
@@ -534,8 +496,7 @@ class Game:
         self.updateIntervall = 0.25
         self.cnt = 0
         self.endGame = False
-
-        
+ 
         curses.initscr()  
         curses.start_color()
         curses.curs_set(False)
@@ -552,15 +513,11 @@ class Game:
 
         self.keyctl = KeyboardController()
          
-
         self.crosshair = Crosshair()
         Screen.addDrawable(self.crosshair)
 
         Screen.addDrawable(Frame(curses.COLS-2,curses.LINES-1,'#'))
         Screen.addDrawable(Easterhenn())
-
-        # mmh, island does not look so cool. maybe completly remove
-        #Screen.addDrawable(Island(IslandLayer, 3, curses.LINES - 12))
 
         locale.setlocale(locale.LC_ALL,"")
         self.background = Background()
@@ -573,8 +530,6 @@ class Game:
             cloud1 = Cloud(-100, -100, "left")
             self.clouds.append(cloud1)
             Screen.addDrawable(cloud1)
-
-
 
     def gameLoop(self):
         time.sleep(self.updateIntervall)
@@ -619,22 +574,16 @@ class Game:
         Screen.draw()
 
 def Main(scr):
-
-
-
     game = Game()
 
     while True:
             game.gameLoop()
             if game.endGame  == True:
                 break
-
     endCurses()
     sys.exit(0)
 
 
 if __name__ == "__main__":
     cursesWrapper(Main)
-
-
 
