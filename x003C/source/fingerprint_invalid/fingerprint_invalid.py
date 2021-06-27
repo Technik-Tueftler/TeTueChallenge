@@ -6,16 +6,34 @@ import random
 from enum import Enum
 import os
 from threading import Thread  
+import threading
 from curses import wrapper as cursesWrapper
 ###################################################
+class KeyboardController():
+    
+    def __init__(self):
+        thread = Thread(target = self.detect_key_press)
+        thread.start()
+        self.key_pressed = False
 
-key_pressed = False
 
-def detect_key_press():
-    global key_pressed
-    stdscr = curses.initscr()
-    key = stdscr.getch()
-    key_pressed = True
+    def detect_key_press(self):
+        self.key_pressed = False
+        stdscr = curses.initscr()
+        self.key = stdscr.getch()
+        self.key_pressed = True
+
+    def getKey(self):
+        thread = Thread(target = self.detect_key_press)
+        thread.start()
+        return self.key
+
+    def getKeyPressed(self):
+        return self.key_pressed
+
+
+
+
 ###################################################
 chickenString = (
 r"             xx     \n"
@@ -74,18 +92,21 @@ r" .-.. \n"
 r"(_)_))  "
 )
 
+
 BackGroundLayer = 0
 EastereggLayer = 1
 
 ShadowLayer = 2
 IslandLayer = 3
 CloudLayer = 10
+CrosshairLayer = 20
 
 COLOR_WATER = 1
 COLOR_CLOUD = 2
 COLOR_SHADOW = 3
 COLOR_BROWN = 4
 COLOR_FRAME = 5
+COLOR_CROSSHAIR = 6
 
 
 ###################################################
@@ -142,8 +163,9 @@ class GraphicsPoint:
    
 
 ###################################################
-class DrawableObject:
+class DrawableObject(threading.Thread):
     def __init__(self, Layer, objString, X, Y, color, opaque = False):
+        threading.Thread.__init__(self)
         self.x_offset = X
         self.y_offset = Y
         self.layer = Layer
@@ -166,6 +188,7 @@ class DrawableObject:
         return returnPoints  
 
     def placeAt(self, X , Y):
+        
         self.x_offset = X
         self.y_offset = Y
 
@@ -277,6 +300,19 @@ class Easterhenn(DrawableObject):
         return retval
 
 
+###################################################
+
+class Crosshair(DrawableObject):
+    def __init__(self):
+        crosshairString = (
+r"<+> \n"
+r" V  \n"
+)
+
+        super().__init__(CrosshairLayer,crosshairString,50,15,COLOR_CROSSHAIR)
+
+
+            
 
 
 
@@ -379,7 +415,9 @@ class Game:
     def __init__(self):
         self.updateIntervall = 0.25
         self.cnt = 0
+        self.endGame = False
 
+        
         curses.initscr()  
         curses.start_color()
         curses.curs_set(False)
@@ -390,6 +428,14 @@ class Game:
         curses.init_pair(COLOR_SHADOW, 233,33) #gray on blue for cloudshadow
         curses.init_pair(COLOR_BROWN, 196, 33) #
         curses.init_pair(COLOR_FRAME, 221, 33) #
+        curses.init_pair(COLOR_CROSSHAIR, 13, 33) #
+
+        self.keyctl = KeyboardController()
+         
+
+        self.crosshair = Crosshair()
+        Screen.addDrawable(self.crosshair)
+
 
         Screen.addDrawable(Frame(curses.COLS-2,curses.LINES-1,'#'))
         Screen.addDrawable(Easterhenn())
@@ -413,6 +459,7 @@ class Game:
 
     def gameLoop(self):
         time.sleep(self.updateIntervall)
+        self.keyControLogic()
         self.logicLoop()
         self.graphicsLoop()
    
@@ -425,26 +472,38 @@ class Game:
             cloud = self.clouds[i]
             if cloud.x_offset <= -10:
                 newX = curses.COLS + random.randrange(0, curses.COLS, 1)
-                newY = random.randrange(5, curses.LINES - ( 2 * cloud.height) - 4, 1)
+                newY = random.randrange(0, curses.LINES - ( 2 * cloud.height) - 4, 1)
                 Screen.removeDrawable(cloud)
                 newCloud = Cloud(newX, newY, "left")
                 Screen.addDrawable(newCloud)
                 self.clouds[i] = newCloud
 
+    def keyControLogic(self):
+        if self.keyctl.getKeyPressed():
+            key = self.keyctl.getKey()
+            if key == curses.KEY_LEFT:
+                self.crosshair.placeAt(self.crosshair.x_offset - 1, self.crosshair.y_offset)
+            if key == curses.KEY_RIGHT:
+                self.crosshair.placeAt(self.crosshair.x_offset + 1, self.crosshair.y_offset)
+            if key == curses.KEY_UP:
+                self.crosshair.placeAt(self.crosshair.x_offset, self.crosshair.y_offset - 1 )
+            if key == curses.KEY_DOWN:
+                self.crosshair.placeAt(self.crosshair.x_offset, self.crosshair.y_offset + 1)
+            if key == 27:#Escape
+                self.endGame = True
 
     def graphicsLoop(self):
         Screen.draw()
 
 def Main(scr):
 
-    thread = Thread(target = detect_key_press)
-    thread.start()
+
 
     game = Game()
 
     while True:
             game.gameLoop()
-            if key_pressed  == True:
+            if game.endGame  == True:
                 break
 
     endCurses()
