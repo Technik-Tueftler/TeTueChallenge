@@ -101,6 +101,7 @@ IslandLayer = 3
 CloudLayer = 10
 AirplaneLayer = 15
 CrosshairLayer = 20
+ExplosionLayer = 30
 
 COLOR_WATER = 1
 COLOR_CLOUD = 2
@@ -109,6 +110,7 @@ COLOR_BROWN = 4
 COLOR_FRAME = 5
 COLOR_CROSSHAIR = 6
 COLOR_AIRPLANE = 7
+COLOR_EXPLOSION = 8
 
 ###################################################
 def parseTxtToDrawableObject(parseString, Color, opaque, removeChar = ''):
@@ -164,9 +166,9 @@ class GraphicsPoint:
    
 
 ###################################################
-class DrawableObject(threading.Thread):
+class DrawableObject():
     def __init__(self, Layer, objString, X, Y, color, opaque = False):
-        threading.Thread.__init__(self)
+
         self.x_offset = X
         self.y_offset = Y
         self.layer = Layer
@@ -309,7 +311,7 @@ r"<+> \n"
 r" V  \n"
 )
 
-        super().__init__(CrosshairLayer,crosshairString,50,15,COLOR_CROSSHAIR)
+        super().__init__(CrosshairLayer,crosshairString,int( curses.COLS/2),int(curses.LINES / 2),COLOR_CROSSHAIR)
 
     def getTarget(self):
         return [self.x_offset +1, self.y_offset]
@@ -365,20 +367,21 @@ class Screen:
 
     def draw():
         Screen.cursesScreen.erase()
-
-        for i in range(len(Screen.layers)):
-            if Screen.layers[i] == []:
+        layers = Screen.layers.copy()
+        for i in range(len(layers)):
+            if layers[i] == []:
                 continue
-            for drawable in Screen.layers[i]:
+            for drawable in layers[i]:
                 try:
                     drawable.move()
                 except:
                     pass
 
-        for i in range(len(Screen.layers)):
-            if Screen.layers[i] == []:
+        layers = Screen.layers.copy()
+        for i in range(len(layers)):
+            if layers[i] == []:
                 continue
-            for drawable in Screen.layers[i]:
+            for drawable in layers[i]:
                 for p in drawable.get():
                     if p.X < curses.COLS -2 and p.X >= 0 and p.Y < curses.LINES - 1 and p.Y >= 0:
                         Screen.cursesScreen.addstr(p.Y, p.X, p.C,curses.color_pair(p.Color))
@@ -400,7 +403,6 @@ class Cloud(MoveAbleObject):
 
         # construct a shadow for the cloud
         self.shadow = MoveAbleObject( ShadowLayer, cloudString, X-3,Y + self.height + 3, COLOR_SHADOW , Direction, 3, False)
-        #Screen.addDrawable(self.shadow)
 
     def __del__(self):
         del self.shadow
@@ -409,6 +411,42 @@ class Cloud(MoveAbleObject):
         l = []
         l.append(self.shadow)
         return l
+###################################################
+
+class Explosion():
+    def __init__(self, X, Y):
+        explosionString1 = (
+  r" .---. \n"
+  r" (\|/)   "
+)
+    
+        explosionString2 = (
+  r" '.\|/.' \n"
+  r" (\   /)   "
+)
+        self.layer = ExplosionLayer
+        self.frame1 = DrawableObject(ExplosionLayer, explosionString1,X-3,Y, COLOR_EXPLOSION, False)
+        self.frame2 = DrawableObject(ExplosionLayer, explosionString2,X-4,Y, COLOR_EXPLOSION, False)
+        self.cnt = 0
+        self.fnr = 1
+
+    def get(self):
+        if self.cnt == 4:
+            Screen.removeDrawable(self)
+        if self.fnr == 1:
+            self.fnr = 2
+            self.cnt += 1 
+            return self.frame1.get()
+        if self.fnr == 2:
+            self.fnr = 1
+            self.cnt += 1 
+            return self.frame2.get()     
+
+     
+
+    def getChilds(self):
+        return []
+
 ###################################################
 class Island(DrawableObject):
 
@@ -425,9 +463,11 @@ class Bomb(MoveAbleObject):
         self.bombExploded = False
         self.started = False
 
-    def checkExplosion(self):
+    def  checkExplosion(self):
         if (self.x_offset + 2 >= self.xTarget) & (self.y_offset == self.yTarget):
             self.bombExploded = True
+            explosion = Explosion(self.xTarget, self.yTarget)
+            Screen.addDrawable(explosion)
             Screen.removeDrawable(self)
             return True
         else:
@@ -479,7 +519,7 @@ r"         | \n"
             self.bombExploded = self.bomb.bombExploded
         else:
             self.y_offset -= 1
-        if (self.bombExploded == False) & (self.x_offset >= (self.target_x - 15)):
+        if (self.bombExploded == False) & (self.x_offset >= (self.target_x - 20)):
                 self.bomb.setOff()
         if (self.y_offset < -5) | (self.x_offset > curses.COLS + 5):
             Screen.removeDrawable(self)
@@ -506,8 +546,9 @@ class Game:
         curses.init_pair(COLOR_SHADOW, 233,33) #gray on blue for cloudshadow
         curses.init_pair(COLOR_BROWN, 196, 33) #
         curses.init_pair(COLOR_FRAME, 221, 33) #
-        curses.init_pair(COLOR_CROSSHAIR, 13, 33) #
-        curses.init_pair(COLOR_AIRPLANE, 1, 33) #
+        curses.init_pair(COLOR_CROSSHAIR, 1, 33) #
+        curses.init_pair(COLOR_AIRPLANE, 7, 33) #
+        curses.init_pair(COLOR_EXPLOSION, 13, 33) #
 
         self.keyctl = KeyboardController()
          
