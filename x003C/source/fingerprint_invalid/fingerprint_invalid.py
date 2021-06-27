@@ -9,7 +9,13 @@ from threading import Thread
 from curses import wrapper as cursesWrapper
 ###################################################
 
+key_pressed = False
 
+def detect_key_press():
+    global key_pressed
+    stdscr = curses.initscr()
+    key = stdscr.getch()
+    key_pressed = True
 ###################################################
 chickenString = (
 r"             xx     \n"
@@ -431,17 +437,18 @@ class Game:
 
 def Main(scr):
 
-
+    thread = Thread(target = detect_key_press)
+    thread.start()
 
     game = Game()
 
     while True:
-        try:
             game.gameLoop()
-           
-        except:
-            endCurses()
-            sys.exit(0)
+            if key_pressed  == True:
+                break
+
+    endCurses()
+    sys.exit(0)
 
 
 if __name__ == "__main__":
