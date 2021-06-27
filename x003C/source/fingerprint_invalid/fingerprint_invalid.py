@@ -233,7 +233,6 @@ class MoveAbleObject(DrawableObject):
                 self.x_offset = self.x_offset + self.speed
 
     def get(self):
-        self.move()
         return super().get()
 
 ###################################################
@@ -371,6 +370,15 @@ class Screen:
             if Screen.layers[i] == []:
                 continue
             for drawable in Screen.layers[i]:
+                try:
+                    drawable.move()
+                except:
+                    pass
+
+        for i in range(len(Screen.layers)):
+            if Screen.layers[i] == []:
+                continue
+            for drawable in Screen.layers[i]:
                 for p in drawable.get():
                     if p.X < curses.COLS -2 and p.X >= 0 and p.Y < curses.LINES - 1 and p.Y >= 0:
                         Screen.cursesScreen.addstr(p.Y, p.X, p.C,curses.color_pair(p.Color))
@@ -418,7 +426,7 @@ class Bomb(MoveAbleObject):
         self.started = False
 
     def checkExplosion(self):
-        if (self.x_offset-2 >= self.xTarget) & (self.y_offset == self.yTarget):
+        if (self.x_offset + 2 >= self.xTarget) & (self.y_offset == self.yTarget):
             self.bombExploded = True
             Screen.removeDrawable(self)
             return True
@@ -430,14 +438,16 @@ class Bomb(MoveAbleObject):
     
     def move(self):
         if self.started == True:
+            
             xdist = self.xTarget - self.x_offset + 2# + because rocket extends to the right, and the tip arrives first
             if (xdist > 0) & (xdist > self.speed):
                 self.x_offset += self.speed
             else:
                 if (xdist > 0) & (xdist <= self.speed):
-                    self.x_offset += xdist
+                    self.x_offset += 1
             if (self.y_offset < self.yTarget):
                 self.y_offset += 1
+            self.checkExplosion()
         else:
             super().move()
 
@@ -466,10 +476,13 @@ r"         | \n"
 
     def get(self):
         if self.bombExploded == False:
-            self.bombExploded = self.bomb.checkExplosion()
-            #del self.bomb
+            self.bombExploded = self.bomb.bombExploded
+        else:
+            self.y_offset -= 1
         if (self.bombExploded == False) & (self.x_offset >= (self.target_x - 15)):
                 self.bomb.setOff()
+        if (self.y_offset < -5) | (self.x_offset > curses.COLS + 5):
+            Screen.removeDrawable(self)
         return super().get()
 
 
