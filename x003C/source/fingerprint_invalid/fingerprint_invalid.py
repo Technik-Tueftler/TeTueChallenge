@@ -99,6 +99,7 @@ EastereggLayer = 1
 ShadowLayer = 2
 IslandLayer = 3
 CloudLayer = 10
+AirplaneLayer = 15
 CrosshairLayer = 20
 
 COLOR_WATER = 1
@@ -107,7 +108,7 @@ COLOR_SHADOW = 3
 COLOR_BROWN = 4
 COLOR_FRAME = 5
 COLOR_CROSSHAIR = 6
-
+COLOR_AIRPLANE = 7
 
 ###################################################
 def parseTxtToDrawableObject(parseString, Color, opaque, removeChar = ''):
@@ -311,12 +312,8 @@ r" V  \n"
 
         super().__init__(CrosshairLayer,crosshairString,50,15,COLOR_CROSSHAIR)
 
-
-            
-
-
-
-
+    def getTarget(self):
+        return [self.x_offset +1, self.y_offset]
 
 ###################################################
 class Water:
@@ -360,9 +357,11 @@ class Screen:
             Screen.layers[obj.layer].append(child)
 
     def removeDrawable(obj):
-        Screen.layers[obj.layer].remove(obj)
+        if obj in Screen.layers[obj.layer]:
+            Screen.layers[obj.layer].remove(obj)
         for child in obj.getChilds():
-            Screen.layers[obj.layer].remove(child)
+            if obj in Screen.layers[obj.layer]:
+                Screen.layers[obj.layer].remove(child)
 
 
     def draw():
@@ -408,7 +407,73 @@ class Island(DrawableObject):
     def __init__(self, Layer, X, Y):
         super().__init__(Layer, islandString, X, Y, COLOR_BROWN, False)
 
+###################################################
+class Bomb(MoveAbleObject):
+    def __init__(self,Layer, X, Y, Color, Direction, Speed, XTarget, YTarget):
+        bombString = r">-> \n"
+        super().__init__(Layer, bombString, X, Y, Color, Direction, Speed, False)
+        self.xTarget = XTarget
+        self.yTarget = YTarget
+        self.bombExploded = False
+        self.started = False
 
+    def checkExplosion(self):
+        if (self.x_offset-2 >= self.xTarget) & (self.y_offset == self.yTarget):
+            self.bombExploded = True
+            Screen.removeDrawable(self)
+            return True
+        else:
+            return False
+
+    def setOff(self):
+        self.started = True
+    
+    def move(self):
+        if self.started == True:
+            xdist = self.xTarget - self.x_offset + 2# + because rocket extends to the right, and the tip arrives first
+            if (xdist > 0) & (xdist > self.speed):
+                self.x_offset += self.speed
+            else:
+                if (xdist > 0) & (xdist <= self.speed):
+                    self.x_offset += xdist
+            if (self.y_offset < self.yTarget):
+                self.y_offset += 1
+        else:
+            super().move()
+
+
+
+###################################################
+class AirPlane(MoveAbleObject):
+    def __init__(self, X, Y, tX,tY):
+        self.target_x = tX
+        self.target_y = tY
+        self.flightHeight = Y
+        self.bombExploded = False
+        planeString = (
+r" (\__.-. | \n"
+r" == ===_]+ \n"
+r"         | \n"
+    )
+        super().__init__(AirplaneLayer, planeString, X , tY - Y, COLOR_AIRPLANE, "right", 3, False )
+        self.bomb = Bomb(AirplaneLayer,X+2,tY-Y+1,COLOR_AIRPLANE,"right",3,tX,tY)
+
+
+    def getChilds(self):
+        l = []
+        l.append(self.bomb)
+        return l
+
+    def get(self):
+        if self.bombExploded == False:
+            self.bombExploded = self.bomb.checkExplosion()
+            #del self.bomb
+        if (self.bombExploded == False) & (self.x_offset >= (self.target_x - 15)):
+                self.bomb.setOff()
+        return super().get()
+
+
+        
 ###################################################
 class Game:
 
@@ -429,13 +494,13 @@ class Game:
         curses.init_pair(COLOR_BROWN, 196, 33) #
         curses.init_pair(COLOR_FRAME, 221, 33) #
         curses.init_pair(COLOR_CROSSHAIR, 13, 33) #
+        curses.init_pair(COLOR_AIRPLANE, 1, 33) #
 
         self.keyctl = KeyboardController()
          
 
         self.crosshair = Crosshair()
         Screen.addDrawable(self.crosshair)
-
 
         Screen.addDrawable(Frame(curses.COLS-2,curses.LINES-1,'#'))
         Screen.addDrawable(Easterhenn())
@@ -477,6 +542,7 @@ class Game:
                 newCloud = Cloud(newX, newY, "left")
                 Screen.addDrawable(newCloud)
                 self.clouds[i] = newCloud
+                self.airplane = ""
 
     def keyControLogic(self):
         if self.keyctl.getKeyPressed():
@@ -491,6 +557,9 @@ class Game:
                 self.crosshair.placeAt(self.crosshair.x_offset, self.crosshair.y_offset + 1)
             if key == 27:#Escape
                 self.endGame = True
+            if key == 32:#Space
+                self.airplane = AirPlane(-5, 5, self.crosshair.getTarget()[0], self.crosshair.getTarget()[1])
+                Screen.addDrawable(self.airplane)
 
     def graphicsLoop(self):
         Screen.draw()
