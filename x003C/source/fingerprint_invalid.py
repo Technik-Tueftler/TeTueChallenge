@@ -7,44 +7,7 @@ import os
 from threading import Thread  
 from curses import wrapper as cursesWrapper
 
-
-
-
 ###################################################
-chickenString = (
-r"             xx     \n"
-r"             / .|_  \n"
-r"            /(_)_<  \n"
-r"           /  (     \n"
-r"  ((____.-'    )    \n"
-r"   \\          /    \n"
-r"    \\'-.-.-'`/     \n"
-r"     \\______/      \n"
-r"       _|_\\_         "
-)
-
-cloudString1 = (  
-r"    ____ _  \n"
-r"  _(    `.) \n"
-r" ( (    ) ))\n"
-r"( (   )  _) \n"
-r" '.__)--'   "
-)
-
-cloudString2 = (
-r"  _ __   \n"
-r" ( (  )`.\n"
-r"( (    ))\n"
-r" `-(__.' "
-)
- 
-
-cloudString3 = (
-r" .-.. \n"
-r"(_)_))  "
-)
-
-
 BackGroundLayer = 0
 EastereggLayer = 1
 
@@ -246,6 +209,17 @@ class Background(DrawableObject):
 
 class Easterhenn(DrawableObject):
     def __init__(self):
+        chickenString = (
+r"             xx     \n"
+r"             / .|_  \n"
+r"            /(_)_<  \n"
+r"           /  (     \n"
+r"  ((____.-'    )    \n"
+r"   \\          /    \n"
+r"    \\'-.-.-'`/     \n"
+r"     \\______/      \n"
+r"       _|_\\_         "
+)
         super().__init__(EastereggLayer, chickenString, -100, -100, COLOR_WATER , False)
         self.cnt = 0
         self.old = []
@@ -355,6 +329,26 @@ class Screen:
 class Cloud(MoveAbleObject):
 
     def __init__(self, X, Y, Direction):
+        cloudString1 = (  
+r"    ____ _  \n"
+r"  _(    `.) \n"
+r" ( (    ) ))\n"
+r"( (   )  _) \n"
+r" '.__)--'   "
+)
+
+        cloudString2 = (
+r"  _ __   \n"
+r" ( (  )`.\n"
+r"( (    ))\n"
+r" `-(__.' "
+)
+ 
+
+        cloudString3 = (
+r" .-.. \n"
+r"(_)_))  "
+)
         self.id = random.randrange(1,100,1)
         cloudsStrings = []
         cloudsStrings.append(cloudString1)
@@ -494,7 +488,7 @@ class Game:
         curses.init_pair(COLOR_BROWN, 196, 33) #
         curses.init_pair(COLOR_FRAME, 221, 33) #
         curses.init_pair(COLOR_CROSSHAIR, 1, 33) #
-        curses.init_pair(COLOR_AIRPLANE, 7, 33) #
+        curses.init_pair(COLOR_AIRPLANE, 119, 33) #
         curses.init_pair(COLOR_EXPLOSION, 13, 33) #
 
         self.keyctl = KeyboardController()
