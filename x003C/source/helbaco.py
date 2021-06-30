@@ -1,3 +1,6 @@
+from rich import print
+
+
 def print_field(field):
     for row in field:
         print(' '.join([str(pos) for pos in row]))
@@ -6,16 +9,16 @@ def print_field(field):
 sizeX = int(input('width: '))
 sizeY = int(input('height: '))
 
-# sizeX, sizeY = 6, 5
+#sizeX, sizeY = 6, 5
 
-field = [[0] * (sizeX) for i in range((sizeY))]
+field = [['[bold green]0[/bold green]'] * (sizeX) for i in range((sizeY))]
 print_field(field)
 
 playing = True
 while playing:
     posX = int(input(f'attack x (0-{sizeX-1}): '))
     posY = int(input(f'attack y (0-{sizeY-1}): '))
-    field[posY][posX] = 'X'
+    field[posY][posX] = '[bold red]X[/bold red]'
 
     print_field(field)
 
@@ -26,5 +29,3 @@ while playing:
     else:
         playing = False
         print('\nso long, and thanks for all the fish')
-
-
