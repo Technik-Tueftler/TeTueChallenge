@@ -44,22 +44,22 @@ class Streamdeck(App):
         )
 
         layout.place(
-            button_t1=Placeholder(name="tab_button_1"),
-            button_t2=Placeholder(name="tab_button_2"),
-            button_t3=Placeholder(name="tab_button_3"),
-            button_t4=Placeholder(name="tab_button_4"),
-            button_00=Placeholder(name="button_00"),
-            button_01=Placeholder(name="button_01"),
-            button_02=Placeholder(name="button_02"),
-            button_03=Placeholder(name="button_03"),
-            button_10=Placeholder(name="button_10"),
-            button_11=Placeholder(name="button_11"),
-            button_12=Placeholder(name="button_12"),
-            button_13=Placeholder(name="button_13"),
-            button_20=Placeholder(name="button_20"),
-            button_21=Placeholder(name="button_21"),
-            button_22=Placeholder(name="button_22"),
-            button_23=Placeholder(name="button_23"),
+            button_t1=Button(style="white on rgb(51,51,51)", name="tab_button_1"),
+            button_t2=Button(style="white on rgb(51,51,51)", name="tab_button_2"),
+            button_t3=Button(style="white on rgb(51,51,51)", name="tab_button_3"),
+            button_t4=Button(style="white on rgb(51,51,51)", name="tab_button_4"),
+            button_00=Button(style="white on rgb(51,51,51)", name="button_00"),
+            button_01=Button(style="white on rgb(51,51,51)", name="button_01"),
+            button_02=Button(style="white on rgb(51,51,51)", name="button_02"),
+            button_03=Button(style="white on rgb(51,51,51)", name="button_03"),
+            button_10=Button(style="white on rgb(51,51,51)", name="button_10"),
+            button_11=Button(style="white on rgb(51,51,51)", name="button_11"),
+            button_12=Button(style="white on rgb(51,51,51)", name="button_12"),
+            button_13=Button(style="white on rgb(51,51,51)", name="button_13"),
+            button_20=Button(style="white on rgb(51,51,51)", name="button_20"),
+            button_21=Button(style="white on rgb(51,51,51)", name="button_21"),
+            button_22=Button(style="white on rgb(51,51,51)", name="button_22"),
+            button_23=Button(style="white on rgb(51,51,51)", name="button_23"),
         )
 
 
