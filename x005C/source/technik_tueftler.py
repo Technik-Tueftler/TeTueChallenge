@@ -18,99 +18,48 @@ def break_numbers(num: int) -> (int, int):
     return num // 10, num % 10
 
 
-def set_battleship_in_direction(row: int, col: int, size: int, func_started: bool, direction: str, battle_field: list) \
-        -> bool:
+def set_battleship_in_direction(row: int, col: int, size: int, func_started: bool, ship_sign: str, direction: str,
+                                battle_field: list) -> bool:
     size -= 1
     if size <= 0: return True
     if not func_started:
-        battle_field[row][col] = "X"
+        battle_field[row][col] = ship_sign
     if direction == "n":
-        if row - 1 < 0:  # ToDo: Fehlercheck kann gelöscht werden
-            print(f'Fehler in Setzrichtung {direction}')
-            return False
-        if battle_field[row - 1][col] == 0:
-            battle_field[row - 1][col] = "X"
-            set_battleship_in_direction(row - 1, col, size, True, "n", battle_field)
-        else:
-            print(f'Fehler Feld ist besetzt {direction}')
-            return False
-    elif direction == "e":  # ToDo: Fehlercheck kann gelöscht werden
-        if col + 1 > 9:
-            print(f'Fehler in Setzrichtung {direction}')
-            return False
-        if battle_field[row][col + 1] == 0:
-            battle_field[row][col + 1] = "X"
-            set_battleship_in_direction(row, col + 1, size, True, "e", battle_field)
-        else:
-            print(f'Fehler Feld ist besetzt {direction}')
-            return False
-    elif direction == "s":  # ToDo: Fehlercheck kann gelöscht werden
-        if row + 1 > 9:
-            print(f'Fehler in Setzrichtung {direction}')
-            return False
-        if battle_field[row + 1][col] == 0:
-            battle_field[row + 1][col] = "X"
-            set_battleship_in_direction(row + 1, col, size, True, "s", battle_field)
-        else:
-            print(f'Fehler Feld ist besetzt {direction}')
-            return False
+        battle_field[row - 1][col] = ship_sign
+        set_battleship_in_direction(row - 1, col, size, True, ship_sign, "n", battle_field)
+    elif direction == "e":
+        battle_field[row][col + 1] = ship_sign
+        set_battleship_in_direction(row, col + 1, size, True, ship_sign, "e", battle_field)
+    elif direction == "s":
+        battle_field[row + 1][col] = ship_sign
+        set_battleship_in_direction(row + 1, col, size, True, ship_sign, "s", battle_field)
     elif direction == "w":
-        if col - 1 < 0:  # ToDo: Fehlercheck kann gelöscht werden
-            print(f'Fehler in Setzrichtung {direction}')
-            return False
-        if battle_field[row][col - 1] == 0:
-            battle_field[row][col - 1] = "X"
-            set_battleship_in_direction(row, col - 1, size, True, "w", battle_field)
-        else:
-            print(f'Fehler Feld ist besetzt {direction}')
-            return False
+        battle_field[row][col - 1] = ship_sign
+        set_battleship_in_direction(row, col - 1, size, True, ship_sign, "w", battle_field)
 
 
 def next_field_valid(row: int, col: int, size: int, directions: str, battle_field: list) -> bool:
-    print(f'Aktueller Index: [{row}][{col}]')
     size -= 1
-    if size <= 0:
-        print(f'Richtung {directions}')
-        return True
+    if size <= 0: return True  #
     if directions == "n":
-        print(f'Call: [{row}][{col}] und Size: {size}]')
-        if row - 1 < 0:
-            print(f'Fehler in Richtung {directions}')
-            return False
-        if battle_field[row - 1][col] != 0:
-            print(f'Fehler Feld ist besetzt [{row - 1}][{col}]')
-            return False
+        if row - 1 < 0: return False  # end of playing field reached
+        if battle_field[row - 1][col] != 0: return False  # playing field is occupied
         return next_field_valid(row - 1, col, size, directions, battle_field)
     elif directions == "e":
-        print(f'Call: [{row}][{col}] und Size: {size}]')
-        if col + 1 > 9:
-            print(f'Fehler in Richtung {directions}')
-            return False
-        if battle_field[row][col + 1] != 0:
-            print(f'Fehler Feld ist besetzt [{row}][{col + 1}]')
-            return False
+        if col + 1 > 9: return False
+        if battle_field[row][col + 1] != 0: return False
         return next_field_valid(row, col + 1, size, directions, battle_field)
     elif directions == "s":
-        print(f'Call: [{row}][{col}] und Size: {size}]')
-        if row + 1 > 9:
-            print(f'Fehler in Richtung {directions}')
-            return False
-        if battle_field[row + 1][col] != 0:
-            print(f'Fehler Feld ist besetzt [{row + 1}][{col}]')
-            return False
+        if row + 1 > 9: return False
+        if battle_field[row + 1][col] != 0: return False
         return next_field_valid(row + 1, col, size, directions, battle_field)
     elif directions == "w":
-        print(f'Call: [{row}][{col}] und Size: {size}]')
-        if col - 1 < 0:
-            print(f'Fehler in Richtung {directions}')
-            return False
-        if battle_field[row][col - 1] != 0:
-            print(f'Fehler Feld ist besetzt [{row}][{col - 1}]')
-            return False
+        if col - 1 < 0: return False
+        if battle_field[row][col - 1] != 0: return False
         return next_field_valid(row, col - 1, size, directions, battle_field)
 
 
-def set_new_battleship(battle_field: list, ship_size: int) -> None:
+def set_new_battleship(battle_field: list, ship_size: int, ship_sign: str) -> None:
     directions = ["n", "e", "s", "w"]
     random.shuffle(directions)
     # Generate a list of values (row-index + col-index) for easy access in a loop which field has to be checked
@@ -125,9 +74,7 @@ def set_new_battleship(battle_field: list, ship_size: int) -> None:
         row, col = break_numbers(field)
         for direction in directions:
             if next_field_valid(row, col, ship_size, direction, battle_field) is True:
-                set_battleship_in_direction(row, col, ship_size, False, direction, battle_field)
-                print(f'Neues Schiff bei [{row}][{col}] in Richtung {direction} '
-                      f'mit einer Schiffsgröße von {ship_size} möglich.')
+                set_battleship_in_direction(row, col, ship_size, False, ship_sign, direction, battle_field)
                 find_place = True
                 break
         if find_place:
@@ -136,9 +83,11 @@ def set_new_battleship(battle_field: list, ship_size: int) -> None:
 
 def main():
     print("--------Start--------")
-    print_battlefield(battlefield)
-    print("--------Ship 1--------")
-    set_new_battleship(battlefield, 4)
+    set_new_battleship(battlefield, 3, "X")
+    set_new_battleship(battlefield, 3, "X")
+    set_new_battleship(battlefield, 3, "X")
+    set_new_battleship(battlefield, 4, "Y")
+    set_new_battleship(battlefield, 5, "Z")
     print_battlefield(battlefield)
 
 
