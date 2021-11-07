@@ -5,8 +5,8 @@ import random
 battlefield = [[0] * 10 for i in range(10)]
 
 
-def print_battlefield(list):
-    for row in list:
+def print_battlefield(battle_field):
+    for row in battle_field:
         print('  '.join([str(col) for col in row]))
 
 
@@ -24,7 +24,7 @@ def set_battleship_in_direction(row: int, col: int, size: int, func_started: boo
     if size <= 0: return True
     if not func_started:
         battle_field[row][col] = ship_sign
-    if direction == "n":
+    if direction == "n": # Enums
         battle_field[row - 1][col] = ship_sign
         set_battleship_in_direction(row - 1, col, size, True, ship_sign, "n", battle_field)
     elif direction == "e":
@@ -40,13 +40,14 @@ def set_battleship_in_direction(row: int, col: int, size: int, func_started: boo
 
 def next_field_valid(row: int, col: int, size: int, directions: str, battle_field: list) -> bool:
     size -= 1
-    if size <= 0: return True  #
+    if size <= 0: return True
+    # Verbesserung von NeroBurner. Siehe reminder. Frage:
     if directions == "n":
         if row - 1 < 0: return False  # end of playing field reached
         if battle_field[row - 1][col] != 0: return False  # playing field is occupied
         return next_field_valid(row - 1, col, size, directions, battle_field)
     elif directions == "e":
-        if col + 1 > 9: return False
+        if col + 1 > 9: return False # defines
         if battle_field[row][col + 1] != 0: return False
         return next_field_valid(row, col + 1, size, directions, battle_field)
     elif directions == "s":
@@ -83,11 +84,11 @@ def set_new_battleship(battle_field: list, ship_size: int, ship_sign: str) -> No
 
 def main():
     print("--------Start--------")
-    set_new_battleship(battlefield, 3, "X")
-    set_new_battleship(battlefield, 3, "X")
-    set_new_battleship(battlefield, 3, "X")
-    set_new_battleship(battlefield, 4, "Y")
-    set_new_battleship(battlefield, 5, "Z")
+    set_new_battleship(battlefield, 3, "1")
+    set_new_battleship(battlefield, 3, "2")
+    set_new_battleship(battlefield, 3, "3")
+    set_new_battleship(battlefield, 4, "4")
+    set_new_battleship(battlefield, 5, "5")
     print_battlefield(battlefield)
 
 
