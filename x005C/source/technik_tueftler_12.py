@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import random
+BATTLEFIELD_LENGTH = 10
 
-battlefield = [[0] * 10 for i in range(10)]
+battlefield = [0 for i in range(BATTLEFIELD_LENGTH*BATTLEFIELD_LENGTH)]
 
 
 def print_battlefield(battle_field):
-    for row in battle_field:
-        print('  '.join([str(col) for col in row]))
+    for row in range(BATTLEFIELD_LENGTH):
+        print('  '.join([str(battle_field[row*BATTLEFIELD_LENGTH+col]) for col in range(BATTLEFIELD_LENGTH)]))
 
 
-def combine_numbers(num_1: int, num_2: int) -> int:
-    return (num_1 * 10) + num_2
+def combine_numbers(num_1: int, num_2: int) -> str:
+    return f"{num_1}{num_2}"
 
 
-def break_numbers(num: int) -> (int, int):
-    return num // 10, num % 10
+def break_numbers(num: str) -> (int, int):
+    return int(num[0]), int(num[1])
 
 
 def set_battleship_in_direction(row: int, col: int, size: int, func_started: bool, ship_sign: str, direction: str,
@@ -23,40 +24,39 @@ def set_battleship_in_direction(row: int, col: int, size: int, func_started: boo
     size -= 1
     if size <= 0: return True
     if not func_started:
-        battle_field[row][col] = ship_sign
+        battle_field[row * BATTLEFIELD_LENGTH + col] = ship_sign
     if direction == "n": # Enums
-        battle_field[row - 1][col] = ship_sign
+        battle_field[(row - 1) * BATTLEFIELD_LENGTH + col] = ship_sign
         set_battleship_in_direction(row - 1, col, size, True, ship_sign, "n", battle_field)
     elif direction == "e":
-        battle_field[row][col + 1] = ship_sign
+        battle_field[row * BATTLEFIELD_LENGTH + (col + 1)] = ship_sign
         set_battleship_in_direction(row, col + 1, size, True, ship_sign, "e", battle_field)
     elif direction == "s":
-        battle_field[row + 1][col] = ship_sign
+        battle_field[(row + 1) * BATTLEFIELD_LENGTH + col] = ship_sign
         set_battleship_in_direction(row + 1, col, size, True, ship_sign, "s", battle_field)
     elif direction == "w":
-        battle_field[row][col - 1] = ship_sign
+        battle_field[row * BATTLEFIELD_LENGTH + (col - 1)] = ship_sign
         set_battleship_in_direction(row, col - 1, size, True, ship_sign, "w", battle_field)
 
 
 def next_field_valid(row: int, col: int, size: int, directions: str, battle_field: list) -> bool:
     size -= 1
     if size <= 0: return True
-    # Verbesserung von NeroBurner. Siehe reminder. Frage:
     if directions == "n":
         if row - 1 < 0: return False  # end of playing field reached
-        if battle_field[row - 1][col] != 0: return False  # playing field is occupied
+        if battle_field[(row - 1) * BATTLEFIELD_LENGTH + col] != 0: return False  # playing field is occupied
         return next_field_valid(row - 1, col, size, directions, battle_field)
     elif directions == "e":
-        if col + 1 > 9: return False # defines
-        if battle_field[row][col + 1] != 0: return False
+        if col + 1 > 9: return False
+        if battle_field[row * BATTLEFIELD_LENGTH + (col + 1)] != 0: return False
         return next_field_valid(row, col + 1, size, directions, battle_field)
     elif directions == "s":
         if row + 1 > 9: return False
-        if battle_field[row + 1][col] != 0: return False
+        if battle_field[(row + 1) * BATTLEFIELD_LENGTH + col] != 0: return False
         return next_field_valid(row + 1, col, size, directions, battle_field)
     elif directions == "w":
         if col - 1 < 0: return False
-        if battle_field[row][col - 1] != 0: return False
+        if battle_field[row * BATTLEFIELD_LENGTH + (col - 1)] != 0: return False
         return next_field_valid(row, col - 1, size, directions, battle_field)
 
 
@@ -65,9 +65,9 @@ def set_new_battleship(battle_field: list, ship_size: int, ship_sign: str) -> No
     random.shuffle(directions)
     # Generate a list of values (row-index + col-index) for easy access in a loop which field has to be checked
     fields_for_new_ship = [combine_numbers(row, col)
-                           for row in range(len(battle_field))
-                           for col in range(len(battle_field[row]))
-                           if battle_field[row][col] == 0]
+                           for row in range(BATTLEFIELD_LENGTH)
+                           for col in range(BATTLEFIELD_LENGTH)
+                           if battle_field[row * BATTLEFIELD_LENGTH + col] == 0]
     random.shuffle(fields_for_new_ship)  # shuffle list for a random check if field is valid for ship
 
     find_place = False
@@ -80,6 +80,10 @@ def set_new_battleship(battle_field: list, ship_size: int, ship_sign: str) -> No
                 break
         if find_place:
             break
+
+
+def measure_performance():
+    set_new_battleship(battlefield, 5, "5")
 
 
 def main():
