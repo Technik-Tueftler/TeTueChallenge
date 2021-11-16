@@ -42,3 +42,53 @@ An erster Stelle steht der Spaß und eine gemeinsame Lösung am Ende mit euch. G
 2. Anforderungen erfüllt und umgesetzt
 
 ## Ergebnisse
+Hier werden alle Ergebnisse der einzelnen Teilnehmer aufgeschrieben.
+### Technik Tüftler
+#### Zusammenfassung
+`technik_tueftler_11` 491 Aufrufe  
+`technik_tueftler_12` 479 Aufrufe  
+`technik_tueftler_13` 153 Aufrufe  
+`technik_tueftler_14` 53 Aufrufe  
+`technik_tueftler_21` 481 Aufrufe  
+`technik_tueftler_22` 485 Aufrufe  
+#### Einzel
+`technik_tueftler_11:`  Erste Version. Ohne Optimierungen
+Durchschnitt (von 20 Ausführungen) 491 Aufrufe bei einem 5er Schiff. Die meisten Aufrufe:
+- Random: ca. 250
+- int: 102
+- len: 13
+- combine_numbers: 100
+
+`technik_tueftler_12:`  Aus dem battle_field wurde eine eindimensionale Liste. 
+Durchschnitt (von 20 Ausführungen) 479 Aufrufe bei einem 5er Schiff. Die meisten Aufrufe:
+- Random: ca. 240
+- int: 102
+- len: 2
+- combine_numbers: 100
+
+`technik_tueftler_13:`  random.shuffle entfernt für die Liste entfernt
+Durchschnitt (von 20 Ausführungen) 153 Aufrufe bei einem 5er Schiff. Die meisten Aufrufe:
+- Random: ca. 13
+- int: ca. 7
+- len: 14
+- combine_numbers: 100
+
+`technik_tueftler_14:`  entfernen des Funktionsaufrufs aus der list comprehension 
+Durchschnitt (von 20 Ausführungen) 53 Aufrufe bei einem 5er Schiff. Die meisten Aufrufe:
+- Random: ca. 13
+- int: ca. 7
+- len: 14
+
+`technik_tueftler_21:`  Zwei Himmelsrichtungen entfernt. Nur Ost und Süd wird benutzt. 
+Durchschnitt (von 20 Ausführungen) 481 Aufrufe bei einem 5er Schiff. Die meisten Aufrufe:
+- Random: ca. 250
+- int: 100
+- len: 13
+- combine_numbers: 100
+
+`technik_tueftler_22:`  Strings durch Enums ersetzt bei den Abfragen und zwei Himmelsrichtungen entfernt.
+Durchschnitt (von 20 Ausführungen) 485 Aufrufe bei einem 5er Schiff. Die meisten Aufrufe:
+- Random: ca. 250
+- int: 100
+- len: 13
+- combine_numbers: 100
